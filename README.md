@@ -1,1 +1,1 @@
-https://seanchoi-dev.github.io/
+https://seanchoi-dev.github.io/menu
