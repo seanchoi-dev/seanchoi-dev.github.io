@@ -1,5 +1,36 @@
-header {
-    height: 300px;
+.label-position {
     background-color: #43474d;
-    color: #fff;
+    background-position: center;
+    background-repeat: no-repeat;
+}
+
+.label-position:hover,
+.label-position:active,
+.label-position:focus,
+.label-position.active {
+    background-color: #f97352;
+}
+
+.label-position-all {
+    background-image: url('../lib/images/icon-position-all-wh.svg');
+}
+
+.label-position-top {
+    background-image: url('../lib/images/icon-position-top-wh.svg');
+}
+
+.label-position-jungle {
+    background-image: url('../lib/images/icon-position-jng-wh.svg');
+}
+
+.label-position-mid {
+    background-image: url('../lib/images/icon-position-mid-wh.svg');
+}
+
+.label-position-adc {
+    background-image: url('../lib/images/icon-position-bot-wh.svg');
+}
+
+.label-position-support {
+    background-image: url('../lib/images/icon-position-sup-wh.svg');
 }

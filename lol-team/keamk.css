@@ -456,7 +456,7 @@ h1 {
     color: #fff
 }
 
-.choosemix input,.gender-participant input,.gender-player input,.level-participant input,.level-player input,.gender-participant,.level-participant,.list-banned input,#comment-form,#import-participant,#import-team,#import-list-team,#import-list-player {
+.choosemix input,.gender-participant input,.gender-player input,.level-participant input,.level-player input,.gender-participant,.level-participant,.list-banned input,#comment-form,#import-participant,#import-team,#import-list-team,#import-list-player, .position-item {
     display: none
 }
 
@@ -519,11 +519,12 @@ h1 {
     font-size: 18px
 }
 
-.gender-participant label,.level-participant label,.level-player label,.result-option,.gender-player label,.list-banned label {
+.gender-participant label,.level-participant label,.label-position,.level-player label,.result-option,.gender-player label,.list-banned label {
     width: 36px;
+    height: 36px;
     text-align: center;
     font-size: 18px;
-    padding-top: 3px;
+    padding-top: 5px;
     padding-bottom: 3px;
     font-weight: 400;
     cursor: pointer;
@@ -533,7 +534,7 @@ h1 {
 }
 
 .level-participant,.gender-participant,.level-player,.result-option,.gender-player,.list-banned {
-    margin-top: 4px
+    /* margin-top: 4px */
 }
 
 .gender-participant .gender-male label:hover,.gender-participant .gender-male input:checked + label,.r-male {
@@ -556,7 +557,7 @@ h1 {
     color: #fff !important
 }
 
-.level-hover {
+.level-hover, .tier-selected {
     background-color: #f97352 !important;
     color: #fff !important
 }
