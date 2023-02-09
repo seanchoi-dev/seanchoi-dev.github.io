@@ -6,7 +6,7 @@ const getNewParticipant = (index) => {
             <span class="input-group-text">
                 <i class="fa fa-times delete-player"></i>
             </span>
-            <input type="text" id="mix_players_${index}_name" name="mix[players][${index}][name]" class="form-control input-participants" placeholder="Participant 1" value="" control-id="ControlID-5">
+            <input type="text" id="mix_players_${index}_name" name="mix[players][${index}][name]" class="form-control input-participants" placeholder="Participant ${index+1}" value="" control-id="ControlID-5">
         </div>
     </div>
     <div class="col-md-3 positions">
@@ -55,12 +55,33 @@ const getNewParticipant = (index) => {
     </div>
 </div>`;
 }
-const defaultParticipants = () => {
+const addPlayer = (index) => {
     const players = document.getElementById('mix_players');
-    for (let i=0; i<10; i++) {
-        const div = document.createElement('div');
-        div.innerHTML = getNewParticipant(i);
-        players.append(div);
+    const div = document.createElement('div');
+    div.innerHTML = getNewParticipant(index);
+    players.append(div);
+};
+
+const removePlayer = (index) => {
+    const p = document.getElementById(`mix_players__${index}`);
+    p.parentElement.remove();
+}
+
+const numOfPlayers = document.getElementById('nb-participants');
+numOfPlayers.addEventListener('change', (e) => {
+    const currentPlayers = document.querySelectorAll('.participant-div');
+    if (currentPlayers.length < numOfPlayers.value) {
+        for (let i=currentPlayers.length; i<numOfPlayers.value; i++) {
+            addPlayer(i);
+        }
+    } else {
+        
+    }
+})
+const defaultParticipants = () => {
+    const count = numOfPlayers.value || 10;
+    for (let i=0; i<count; i++) {
+        addPlayer(i);
     }
 };
 
@@ -84,6 +105,7 @@ const positionEventListener = () =>  {
         });
     });
 }
+
 
 defaultParticipants();
 positionEventListener();

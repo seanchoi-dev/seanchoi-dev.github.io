@@ -122,102 +122,8 @@
                 }
                 ;t('#style-temp').text(e)
             })
-        }
-        ;
-        updateSelectPlayers = function() {
-            o.val(e);
-            t('#countPlayers').text(e)
-        }
-        ;
-        updateSelectTeams = function() {
-            r.val(i);
-            t('#countTeams').text(i)
-        }
-        ;
-        addTeam = function() {
-            if (i < 100) {
-                var e = t(n.attr('data-prototype').replace(/__name__/g, c).replace(/_NT_/g, ' ' + (i + 1)));
-                n.append(e);
-                i++;
-                c++;
-                return !0
-            }
-        }
-        ;
-        addPlayer = function() {
-            if (e < 100) {
-                var i = t(a.attr('data-prototype').replace(/__name__/g, l).replace(/_NP_/g, ' ' + (e + 1)));
-                a.append(i);
-                e++;
-                l++;
-                return !0
-            }
-        }
-        ;
-        changeSelectPlayersOrTeams = function() {
-            o.change(function() {
-                var i = t(this).val();
-                if (i > e) {
-                    for (var o = e; o < i; o++)
-                        addPlayer()
-                }
-                ;if (i < e) {
-                    var n = e - i;
-                    a.children('div').slice(-n).remove();
-                    e = e - (n)
-                }
-                ;updateSelectPlayers()
-            });
-            r.change(function() {
-                var e = t(this).val();
-                if (e > i) {
-                    for (var o = i; o < e; o++)
-                        addTeam()
-                }
-                ;if (e < i) {
-                    var a = i - e;
-                    n.children('div').slice(-a).remove();
-                    i = i - (a)
-                }
-                ;updateSelectTeams()
-            })
-        }
-        ;
-        moreLess = function() {
-            t('#more-player').click(function() {
-                addPlayer();
-                t('.input-participants').last().focus();
-                updateSelectPlayers()
-            });
-            t('#more-team').click(function() {
-                addTeam();
-                t('.input-teams').last().focus();
-                updateSelectTeams()
-            });
-            t('#mix_players').on('click', '.delete-player', function() {
-                if (e > 1) {
-                    t(this).closest('.participant-div').parent().remove();
-                    e--;
-                    updateSelectPlayers();
-                    var i = t('#mix_players').attr('data-participant-trans');
-                    t('.input-participants').each(function(e) {
-                        t(this).attr('placeholder', i + ' ' + (e + 1))
-                    })
-                }
-            });
-            t('#mix_teams').on('click', '.delete-team', function() {
-                if (i > 1) {
-                    t(this).closest('.team-div').parent().remove();
-                    i--;
-                    updateSelectTeams();
-                    var e = t('#mix_teams').attr('data-team-trans');
-                    t('.input-teams').each(function(i) {
-                        t(this).attr('placeholder', e + ' ' + (i + 1))
-                    })
-                }
-            })
-        }
-        ;
+        };
+        
         importList = function() {
             t('#import-p-button').click(function() {
                 var n = t('#import-participant-list').val().split(/\n/)
@@ -307,8 +213,7 @@
                     t('#mixListPlayerModal').modal('hide')
                 })
             })
-        }
-        ;
+        };
         levelSystem = function() {
             setLevel('.level-participant');
             t('#mix_players').on({
@@ -322,62 +227,14 @@
                     setLevel(e)
                 }
             }, '.level-participant label')
-        }
-        ;
+        };
         setLevel = function(e) {
             var i = t(e).find('input:checked');
             if (i.length > 0) {
                 t(i).prevAll('label').andSelf().addClass('level-hover');
                 t(i).nextAll().removeClass('level-hover')
             }
-        }
-        ;
-        selectResultInput = function() {
-            t('.result-input-link').click(function() {
-                t(this).select()
-            });
-            t('.result-input-link').blur(function() {
-                t(this).val(this.defaultValue)
-            })
-        }
-        ;
-        ajaxActions = function() {
-            t('input[name=\'hide-option\']').change(function() {
-                var e = (t(this).prop('checked')) ? 1 : 0;
-                t.ajax({
-                    url: Routing.generate('mix_hide_option', {
-                        id: t(this).attr('data-id'),
-                        val: e
-                    }),
-                    method: 'GET'
-                }).done(function(e) {
-                    if (e == 1) {
-                        t('.result-option').removeClass('res-opa-1').addClass('res-opa-05')
-                    } else {
-                        t('.result-option').removeClass('res-opa-05').addClass('res-opa-1')
-                    }
-                })
-            });
-            t('#regenerateEditDontShow').click(function() {
-                setCookie('confirm_edit', 'hide', 365);
-                t('#editMessage').hide()
-            });
-            t('#regenerateCloneDontShow').click(function() {
-                setCookie('confirm_clone', 'hide', 365);
-                t('#editMessage').hide()
-            });
-            t('#cookiesPrivacyButton').click(function() {
-                setCookie('cookies_privacy', 'yes', 365);
-                t('#cookies-privacy').hide()
-            });
-            t('#btnCloseSupport').click(function() {
-                setCookie('support_block', 'hide', 1)
-            });
-            t('#btnDonateSupport').click(function() {
-                setCookie('support_block', 'hide', 30)
-            })
-        }
-        ;
+        };
         commentCheckLength = function() {
             t('#comment_body').keyup(function() {
                 var a = t(this).val().length
@@ -474,17 +331,17 @@
         }
         ;
         init = function() {
-            updateSelectPlayers();
-            updateSelectTeams();
-            moreLess();
-            changeSelectPlayersOrTeams();
+            
+            
+            
+            
             importList();
             setTypeMix();
             levelSystem();
             validForm();
-            selectResultInput();
+            
             popupSocial();
-            ajaxActions();
+            
             commentCheckLength();
             dynamicModal();
             copyToClipboard()
