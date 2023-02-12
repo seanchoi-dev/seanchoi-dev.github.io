@@ -75,7 +75,9 @@ numOfPlayers.addEventListener('change', (e) => {
             addPlayer(i);
         }
     } else {
-        
+        for (let i=currentPlayers.length-1; i>=numOfPlayers.value; i--) {
+            removePlayer(i);
+        }
     }
 })
 const defaultParticipants = () => {
