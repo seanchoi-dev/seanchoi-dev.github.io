@@ -3,26 +3,23 @@ const getNewParticipant = (index) => {
 <div id="mix_players__${index}" class="participant-div participant-div-form row">
     <div class="col-md-4">
         <div class="input-group">
-            <span class="input-group-text">
-                <i class="fa fa-times delete-player"></i>
-            </span>
-            <input type="text" id="mix_players_${index}_name" name="mix[players][${index}][name]" class="form-control input-participants" placeholder="Participant ${index+1}" value="" control-id="ControlID-5">
+            <input type="text" id="mix_players_${index}_name" name="mix[players][${index}][name]" class="form-control input-participants" placeholder="Participant ${index+1}" value="${index}" control-id="ControlID-5">
         </div>
     </div>
     <div class="col-md-3 positions">
         <div id="mix_players_${index}_position" class="d-flex align-items-end justify-content-center">
             <label for="position_all_${index}" id="label_position_all_${index}" class="mx-1 label-position label-position-all active"></label>
-            <input name="mix[players][${index}][position]" type="checkbox" class="position-item" data-index="${index}" data-position="all" id="position_all_${index}">
+            <input name="mix[players][${index}][position][all]" type="checkbox" class="position-item" data-index="${index}" data-position="all" id="position_all_${index}" checked>
             <label for="position_top_${index}" id="label_position_top_${index}" class="mx-1 label-position label-position-top"></label>
-            <input name="mix[players][${index}][position]" type="checkbox" class="position-item" data-index="${index}" data-position="top" id="position_top_${index}">
+            <input name="mix[players][${index}][position][top]" type="checkbox" class="position-item" data-index="${index}" data-position="top" id="position_top_${index}">
             <label for="position_jungle_${index}" id="label_position_jungle_${index}" class="mx-1 label-position label-position-jungle"></label>
-            <input name="mix[players][${index}][position]" type="checkbox" class="position-item" data-index="${index}" data-position="jungle" id="position_jungle_${index}">
+            <input name="mix[players][${index}][position][jungle]" type="checkbox" class="position-item" data-index="${index}" data-position="jungle" id="position_jungle_${index}">
             <label for="position_mid_${index}" id="label_position_mid_${index}" class="mx-1 label-position label-position-mid"></label>
-            <input name="mix[players][${index}][position]" type="checkbox" class="position-item" data-index="${index}" data-position="mid" id="position_mid_${index}">
+            <input name="mix[players][${index}][position][mid]" type="checkbox" class="position-item" data-index="${index}" data-position="mid" id="position_mid_${index}">
             <label for="position_adc_${index}" id="label_position_adc_${index}" class="mx-1 label-position label-position-adc"></label>
-            <input name="mix[players][${index}][position]" type="checkbox" class="position-item" data-index="${index}" data-position="adc" id="position_adc_${index}">
+            <input name="mix[players][${index}][position][adc]" type="checkbox" class="position-item" data-index="${index}" data-position="adc" id="position_adc_${index}">
             <label for="position_support_${index}" id="label_position_support_${index}" class="mx-1 label-position label-position-support"></label>
-            <input name="mix[players][${index}][position]" type="checkbox" class="position-item" data-index="${index}" data-position="support" id="position_support_${index}">
+            <input name="mix[players][${index}][position][support]" type="checkbox" class="position-item" data-index="${index}" data-position="support" id="position_support_${index}">
         </div>
     </div>
     <div class="col-md-5 no-padding-left">
@@ -108,6 +105,17 @@ const positionEventListener = () =>  {
     });
 }
 
+const importBtn = document.getElementById('import-p-button');
+importBtn.addEventListener('click', () => {
+    const pList = document.getElementById('import-participant-list').value.split(/\n/);
+    let i = 0;
+    pList.forEach((value) => {
+        if (value) {
+            document.getElementById(`mix_players_${i}_name`).value = value;
+            i++;
+        }        
+    })
+});
 
 defaultParticipants();
 positionEventListener();
