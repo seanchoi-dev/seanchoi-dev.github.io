@@ -4,8 +4,12 @@ console.log(participantObj);
 const mixs = {};
 mixs.player = {};
 let playerIndex = 0;
+let balancedBy = '';
 for (const [key, value] of Object.entries(participantObj)) {
-    if (!key.includes('players'));
+    if (!key.includes('players')) {
+        balancedBy = value;
+        continue;
+    }
     const mix = key.split('.');
     if (mix[2] !== playerIndex) {
         playerIndex = mix[2];
@@ -18,6 +22,27 @@ for (const [key, value] of Object.entries(participantObj)) {
     }
     else {
         mixs.player[playerIndex][mix[3]] = value;
-    }    
+    }
 }
-console.log(mixs.player);
+
+const balancedByLevel = (players) => {
+    arr.sort(mixs.player).reverse()
+    let a = [], b = [], sumA = 0, sumB = 0, i = 0
+
+    while (i < arr.length) {
+        if (!sumA && !sumB || sumA == sumB) {
+            a.push(arr[i])
+            sumA += arr[i]
+        } else if (sumA < sumB) {
+            a.push(arr[i])
+            sumA += arr[i];
+        } else if (sumB < sumA) {
+            b.push(arr[i])
+            sumB += arr[i];
+        }
+        i++
+    }
+    console.log(`Total: ${sumA} ${sumB}`)
+    return [a, b]
+}
+console.log(mixs.player, balancedBy);
