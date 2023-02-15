@@ -1,6 +1,6 @@
 const { search } = window.location;
 const participantObj = JSON.parse('{"' + decodeURI(search.substring(1)).replace(/"/g, '\\"').replace(/&/g, '","').replace(/=/g,'":"') + '"}');
-const players = [];
+let players = [];
 
 let playerIndex = 0;
 let balancedBy = '';
@@ -25,20 +25,22 @@ for (const [key, value] of Object.entries(participantObj)) {
     }
     players[playerIndex].index = playerIndex;
 }
-players.sort((a, b)=>{
-    return parseInt(b.level) - parseInt(a.level);
- });
+
 
 const balancedByLevel = (n) => {
+    players.sort((a, b)=>{
+        return parseInt(b.level) - parseInt(a.level);
+    });
+
     const asm = players => players.reduce((a,c)=>a + parseInt(c.level), 0);
     const asm2 = arr=>arr.reduce((a,c)=>a+c,0);
     let lim = Math.ceil(asm(players)/n),
         loopend = players.length*n;
         dist=[...Array(n)].map(()=>[]);
     for (let i = 0; players.length && i < loopend; i++) {
+        console.log(players[0]);
         if (parseInt(asm2(dist[i%n])) + parseInt(players[0].level)<=lim) {
             dist[i % n].push(players.shift());
-           
         }
     }
     // console.log("lim:",lim);
