@@ -3,7 +3,7 @@ const getNewParticipant = (index) => {
 <div id="mix_players__${index}" class="participant-div participant-div-form row">
     <div class="col-md-4">
         <div class="input-group">
-            <input type="text" id="mix_players_${index}_name" name="mix.players.${index}.name" class="form-control input-participants" placeholder="Participant ${index+1}" value="${index}" control-id="ControlID-5">
+            <input type="text" id="mix_players_${index}_name" name="mix.players.${index}.name" class="form-control input-participants" placeholder="Participant ${index+1}">
         </div>
     </div>
     <div class="col-md-3 positions">
