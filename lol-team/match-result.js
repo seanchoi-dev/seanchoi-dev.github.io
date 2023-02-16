@@ -32,59 +32,91 @@ for (const [key, value] of Object.entries(participantObj)) {
         players[playerIndex].position ??= {};
         players[playerIndex].position[mix[4]] = value;
     }
+    else if (mix[3] === 'level'){
+        players[playerIndex][mix[3]] = parseInt(value);
+    }
     else {
         players[playerIndex][mix[3]] = value;
     }
 }
 
-
 function balanceTeamsByLevels(players) {
-    // Shuffle the players randomly
+    // Shuffle the players array
     players = shuffle(players);
-
-    // Split the players into two groups of equal size
-    const group1 = players.slice(0, players.length / 2);
-    const group2 = players.slice(players.length / 2);
-
+  
+    // Sort the players by skill level in descending order
+    players.sort((a, b) => b.level - a.level);
+  
+    // Determine the number of players per team
+    const numPlayersPerTeam = Math.floor(players.length / 2);
+  
     // Initialize two empty teams
     const team1 = [];
     const team2 = [];
-
-    // Assign players to teams alternately, starting with team1
-    for (let i = 0; i < group1.length; i++) {
-        const player1 = group1[i];
-        const player2 = group2[i];
-
-        if (team1.reduce((sum, player) => sum + player.level, 0) + player1.level <=
-            team2.reduce((sum, player) => sum + player.level, 0) + player2.level) {
-        team1.push(player1);
-        team2.push(player2);
-        } else {
-        team1.push(player2);
-        team2.push(player1);
-        }
+  
+    // Initialize variables to keep track of the total skill of each team
+    let totalSkill1 = 0;
+    let totalSkill2 = 0;
+  
+    // Assign players to teams greedily, starting with the highest-skilled player
+    for (let i = 0; i < players.length; i++) {
+      const player = players[i];
+      if (i % 2 === 0 && team1.length < numPlayersPerTeam) {
+        team1.push(player);
+        totalSkill1 += player.level;
+      } else if (team2.length < numPlayersPerTeam) {
+        team2.push(player);
+        totalSkill2 += player.level;
+      } else {
+        team1.push(player);
+        totalSkill1 += player.level;
+      }
     }
-
+  
+    // If the total skill of the two teams is not equal, swap one player between teams
+    const tolerance = 1; // You can adjust this tolerance value
+    while (Math.abs(totalSkill1 - totalSkill2) > tolerance) {
+      let swapped = false;
+      for (let i = 0; i < team1.length; i++) {
+        for (let j = 0; j < team2.length; j++) {
+          const newTotalSkill1 = totalSkill1 - team1[i].level + team2[j].level;
+          const newTotalSkill2 = totalSkill2 - team2[j].level + team1[i].level;
+          if (Math.abs(newTotalSkill1 - newTotalSkill2) < Math.abs(totalSkill1 - totalSkill2)) {
+            const temp = team1[i];
+            team1[i] = team2[j];
+            team2[j] = temp;
+            totalSkill1 = newTotalSkill1;
+            totalSkill2 = newTotalSkill2;
+            swapped = true;
+            break;
+          }
+        }
+        if (swapped) {
+          break;
+        }
+      }
+    }
+  
     // Return an object with both teams
     return { team1, team2 };
-}
+  }
   
-  
-// Helper function to shuffle an array randomly
-function shuffle(array) {
+  function shuffle(array) {
+    // Fisher-Yates shuffle algorithm
     for (let i = array.length - 1; i > 0; i--) {
-        const j = Math.floor(Math.random() * (i + 1));
-        [array[i], array[j]] = [array[j], array[i]];
+      const j = Math.floor(Math.random() * (i + 1));
+      [array[i], array[j]] = [array[j], array[i]];
     }
     return array;
-}
+  }
+  
 
 const teams = balanceTeamsByLevels(players);
 console.log(teams, totalLevels(teams.team1), totalLevels(teams.team2));
 function totalLevels(team) {
     let sum = 0;
     team.forEach((p) => {
-        sum += parseInt(p.level);
+        sum += p.level;
     });
     return sum;
 }
