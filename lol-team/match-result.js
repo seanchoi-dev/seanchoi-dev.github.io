@@ -115,14 +115,12 @@ const teams = balanceTeamsByLevels(players);
 console.log(teams, totalLevels(teams.team1), totalLevels(teams.team2));
 function totalLevels(team) {
     let sum = 0;
-    team.forEach((p) => {
-        sum += p.level;
-    });
+    team.forEach(p =>  sum += p.level);
     return sum;
 }
 const generatePlayer = (player) => {
     let positionsHTML = '';
-    Object.keys(player.position).forEach((p) => positionsHTML += `<div class="icon label-position-${p} me-1"></div>`);
+    Object.keys(player.position).forEach(p => positionsHTML += `<div class="icon label-position-${p} me-1"></div>`);
     return `
     <div class="player mt-3 p-2 d-flex justify-content-between bg-white">
         <div class="name py-1">${player.name}</div>
@@ -135,11 +133,23 @@ const generatePlayer = (player) => {
     </div>`;
 };
 const generateTeam = (team) => {
+    let coveredPostions = new Set();
+    let coveredPostionsHTML = '';
     let playersHTML = '';
-    team.forEach((p) => playersHTML += generatePlayer(p));
+    team.forEach(p => {
+        playersHTML += generatePlayer(p)
+        Object.keys(p.position).forEach(position => coveredPostions.add(position));
+    });
+    coveredPostions = [...(coveredPostions)].sort();
+    coveredPostions.forEach(position => coveredPostionsHTML += `<div class="icon label-position-${position} me-1"></div>`)
     return `<div class="team col-5">
     ${playersHTML}
-    <div class="total text-end me-1 text-white">${totalLevels(team)}</div>
+    <div class="mt-1 d-flex justify-content-between">
+        <div class="covered-positions d-flex">
+            ${coveredPostionsHTML}
+        </div>
+        <div class="total me-1 text-white">${totalLevels(team)}</div>
+    </div>    
 </div>`;
 }
 const vs = () => {
