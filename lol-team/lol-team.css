@@ -34,3 +34,28 @@
 .label-position-support {
     background-image: url('../lib/images/icon-position-sup-wh.svg');
 }
+
+/* for result */
+.result {
+    font-size: 18px;
+    font-weight: 400;
+    color: #333;
+    margin-bottom: 0;
+}
+.level {
+    width: 65.1px;
+    font-weight: 700;
+}
+.level small {
+    font-weight: normal;
+}
+.icon {
+    background-color: #f97352;
+    background-position: center;
+    background-repeat: no-repeat;
+    width: 35px;
+    height: 35px;
+}
+.vs img {
+    max-width: 90%;
+}
