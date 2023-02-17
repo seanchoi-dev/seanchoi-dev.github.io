@@ -1,3 +1,14 @@
+class player {
+    constructor(name, position, level) {
+        this.name = name;
+        this.position = position;
+        this.level = level;
+    }    
+}
+let state = {
+    players: [],
+    balancedBy: 'tier',
+};
 const getNewParticipant = (index) => {
     return `
 <div id="mix_players__${index}" class="participant-div participant-div-form row">
@@ -52,16 +63,24 @@ const getNewParticipant = (index) => {
     </div>
 </div>`;
 }
-const addPlayer = (index) => {
+const addPlayer = (index, player) => {
     const players = document.getElementById('mix_players');
     const div = document.createElement('div');
     div.innerHTML = getNewParticipant(index);
+    if (!player) {
+        const p = new player('', ['all'], 0);
+        state.players.push(p);
+    }
+    else {
+        // div
+    }
     players.append(div);
 };
 
 const removePlayer = (index) => {
     const p = document.getElementById(`mix_players__${index}`);
     p.parentElement.remove();
+    state.players.splice(index, 1);
 }
 
 const numOfPlayers = document.getElementById('nb-participants');
@@ -76,12 +95,17 @@ numOfPlayers.addEventListener('change', (e) => {
             removePlayer(i);
         }
     }
-})
+});
+
 const defaultParticipants = () => {
-    const count = numOfPlayers.value || 10;
-    for (let i=0; i<count; i++) {
-        addPlayer(i);
+    if (!window.localStorage.state) {
+        const count = numOfPlayers.value || 10;
+        for (let i=0; i<count; i++) {
+            addPlayer(i);
+        }
+        return;
     }
+    
 };
 
 const positionEventListener = () =>  {
@@ -117,5 +141,40 @@ importBtn.addEventListener('click', () => {
     })
 });
 
-defaultParticipants();
-positionEventListener();
+const updateState = () => {
+    document.querySelectorAll('#mix_players input').forEach(input => input.addEventListener('change', (e) => {
+        const playerIndex = input.closest('.participant-div').id.split('__')[1];
+        if (input.id.includes('name')) {
+            state.players[playerIndex].name = input.value;            
+        } else if (input.id.includes('level')) {
+            state.players[playerIndex].level = input.value;
+        } else if (input.id.includes('position')) {
+            let positions = [];
+            document.getElementById(`mix_players_${playerIndex}_position`)
+            .querySelectorAll('input')
+            .forEach(i => {
+                if (i.checked) {
+                    positions.push(i.dataset.position);
+                }
+
+            });
+            state.players[playerIndex].position = positions;
+        }
+        saveState();
+    }));
+}
+
+const saveState = () => {
+    window.localStorage.state = JSON.stringify(state);
+}
+
+const submitted = () => {
+    return false;
+}
+
+document.addEventListener('DOMContentLoaded', function () {
+    defaultParticipants();
+    positionEventListener();
+    updateState();
+}, false);
+
