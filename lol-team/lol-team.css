@@ -81,8 +81,12 @@ main {
     min-height: 1000px;
 }
 
-.title {
+.title, .rebalance-btn-container {
     background-color: #00000066;
+    
+}
+
+.nm-as-row {
     margin: 0 calc(-.5 * var(--bs-gutter-x));
 }
 
