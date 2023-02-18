@@ -97,3 +97,11 @@ main {
 .import-icon {
     text-decoration: none;
 }
+
+.audio-player {
+    position: absolute;
+    right: 60px;
+    bottom: 35px;
+    border: 1px solid;
+    border-radius: 30px;
+}
