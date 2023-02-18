@@ -198,12 +198,12 @@ const initTeam = () => {
 
     numParticipantsEvent();
     positionEventListener();
+    updateState();
     setLevel('.level-participant');
 };
 
 
 document.addEventListener('DOMContentLoaded', function () {
     initTeam();
-    updateState();
 }, false);
 
