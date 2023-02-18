@@ -13,42 +13,13 @@ const levelMap = {
     12: 'H'
 };
 const positionOrder = {
-    
-}
-const { search } = window.location;
-const participantObj = JSON.parse('{"' + decodeURI(search.substring(1)).replace(/"/g, '\\"').replace(/&/g, '","').replace(/=/g,'":"') + '"}');
-let players = [];
-let playerIndex = 0;
-let balancedBy = '';
-for (const [key, value] of Object.entries(participantObj)) {
-    if (!key.includes('players')) {
-        balancedBy = value;
-        continue;
-    }
-    const mix = key.split('.');
-    if (mix[2] !== playerIndex) {
-        playerIndex = mix[2];
-        players[playerIndex] = {};
-    }
-
-    if ('position' === mix[3]) {
-        players[playerIndex].position ??= {};
-        players[playerIndex].position[mix[4]] = value;
-    }
-    else if (mix[3] === 'level'){
-        players[playerIndex][mix[3]] = parseInt(value);
-    }
-    else {
-        players[playerIndex][mix[3]] = value;
-    }
 }
 
 function balanceTeamsByLevels(players) {
     // Shuffle the players array
     players = shuffle(players);
-  
-    // Sort the players by skill level in descending order
-    players.sort((a, b) => b.level - a.level);
+    console.log(players);
+    // players.sort((a, b) => b.level - a.level);
   
     // Determine the number of players per team
     const numPlayersPerTeam = Math.floor(players.length / 2);
@@ -112,10 +83,7 @@ function balanceTeamsByLevels(players) {
     }
     return array;
   }
-  
 
-const teams = balanceTeamsByLevels(players);
-console.log(teams, totalLevels(teams.team1), totalLevels(teams.team2));
 function totalLevels(team) {
     let sum = 0;
     team.forEach(p =>  sum += p.level);
@@ -123,7 +91,7 @@ function totalLevels(team) {
 }
 const generatePlayer = (player) => {
     let positionsHTML = '';
-    Object.keys(player.position).forEach(p => positionsHTML += `<div class="icon label-position-${p} me-1"></div>`);
+    player.position.forEach(p => positionsHTML += `<div class="icon label-position-${p} me-1"></div>`);
     return `
     <div class="player mt-3 p-2 d-flex justify-content-between bg-white">
         <div class="name py-1">${player.name}</div>
@@ -141,7 +109,7 @@ const generateTeam = (team) => {
     let playersHTML = '';
     team.forEach(p => {
         playersHTML += generatePlayer(p)
-        Object.keys(p.position).forEach(position => coveredPostions.add(position));
+        p.position.forEach(position => coveredPostions.add(position));
     });
     coveredPostions = [...(coveredPostions)].sort();
     coveredPostions.forEach(position => coveredPostionsHTML += `<div class="icon label-position-${position} me-1"></div>`)
@@ -159,6 +127,9 @@ const vs = () => {
     return `<div class="vs col-2 text-white d-flex align-items-center justify-content-center"><img src="../lib/images/vs.png"></div>`;
 }
 document.addEventListener('DOMContentLoaded', function () {
+    const state = JSON.parse(window.localStorage.state);
+    const teams = balanceTeamsByLevels(state.players);
+    //console.log(teams, totalLevels(teams.team1), totalLevels(teams.team2));
     const result = document.getElementById('result_row');
     result.innerHTML = generateTeam(teams.team1) + vs() + generateTeam(teams.team2);
 }, false);
