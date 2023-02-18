@@ -79,17 +79,9 @@ const removePlayer = (index) => {
     state.players.splice(index, 1);
 }
 
-const initTeam = () => {
-    if (!window.localStorage.state) {
-        for (let i=0; i<10; i++) {
-            addPlayer(i);
-        }
-        return;
-    }
-
-    const stateFromStorage = JSON.parse(window.localStorage.state);
+const numParticipantsEvent = () => {
     const participantsSelect = document.getElementById('nb-participants');
-    participantsSelect.value = stateFromStorage.numOfPlayers;
+    participantsSelect.value = window.localStorage.state ? JSON.parse(window.localStorage.state).numOfPlayers : 10;
     participantsSelect.addEventListener('change', (e) => {     
         const currentPlayers = document.querySelectorAll('.participant-div');
         if (currentPlayers.length < participantsSelect.value) {
@@ -103,8 +95,22 @@ const initTeam = () => {
         }
         state.numOfPlayers = participantsSelect.value;
         saveState();
+        setLevel('.participant-div');
     });
-   
+}
+
+const initTeam = () => {
+    if (!window.localStorage.state) {
+        for (let i=0; i<10; i++) {
+            addPlayer(i);
+        }
+        numParticipantsEvent();
+        return;
+    }
+
+    numParticipantsEvent();
+
+    const stateFromStorage = JSON.parse(window.localStorage.state);
     const players = stateFromStorage.players;
     players.forEach((p, i) => addPlayer(i, p));
     setLevel('.level-participant');
@@ -191,6 +197,7 @@ const submitted = () => {
 const clearAll = () => {
     document.getElementById('mix_players').innerHTML = '';
     window.localStorage.removeItem('state');
+    document.getElementById('nb-participants').value = 10;
     initTeam();
     setLevel('.participant-div');
 };
