@@ -155,6 +155,7 @@ const updateState = () => {
 }
 
 const saveState = () => {
+    console.log(state);
     window.localStorage.state = JSON.stringify(state);
 }
 
@@ -181,7 +182,13 @@ const clearAll = () => {
     document.getElementById('mix_players').innerHTML = '';
     window.localStorage.removeItem('state');
     document.getElementById('nb-participants').value = 10;
+    state = {
+        players: [],
+        balancedBy: 'tier',
+        numOfPlayers: 10,
+    };
     initTeam();
+    saveState();
     setLevel('.participant-div');
 };
 
