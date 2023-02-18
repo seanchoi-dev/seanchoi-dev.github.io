@@ -188,6 +188,12 @@ const submitted = () => {
     
     return false;
 }
+const clearAll = () => {
+    document.getElementById('mix_players').innerHTML = '';
+    window.localStorage.removeItem('state');
+    initTeam();
+    setLevel('.participant-div');
+};
 
 document.addEventListener('DOMContentLoaded', function () {
     initTeam();
