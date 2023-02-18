@@ -55,7 +55,9 @@ function balanceTeamsByLevels(players) {
   
     // If the total skill of the two teams is not equal, swap one player between teams
     const tolerance = 1; // You can adjust this tolerance value
-    while (Math.abs(totalSkill1 - totalSkill2) > tolerance) {
+    const MAX_TRIAL = 100000; // to prevent infinity loop
+    let trial = 0;
+    while (Math.abs(totalSkill1 - totalSkill2) > tolerance && trial < MAX_TRIAL) {
       let swapped = false;
       for (let i = 0; i < team1.length; i++) {
         for (let j = 0; j < team2.length; j++) {
@@ -75,6 +77,7 @@ function balanceTeamsByLevels(players) {
           break;
         }
       }
+      trial++;
     }
   
     // Return an object with both teams
