@@ -83,6 +83,7 @@ main {
 
 .title {
     background-color: #00000066;
+    margin: 0 calc(-.5 * var(--bs-gutter-x));
 }
 
 .input-error {

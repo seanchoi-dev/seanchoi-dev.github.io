@@ -13,6 +13,12 @@ const levelMap = {
     12: 'H'
 };
 const positionOrder = {
+  'top': 1,
+  'jungle': 2,
+  'mid': 3,
+  'adc': 4,
+  'support': 5,
+  'all': 6,
 }
 
 function balanceTeamsByLevels(players) {
@@ -111,12 +117,14 @@ const generateTeam = (team) => {
         playersHTML += generatePlayer(p)
         p.position.forEach(position => coveredPostions.add(position));
     });
-    coveredPostions = [...(coveredPostions)].sort();
+    coveredPostions = [...(coveredPostions)].sort((a, b)=>{
+      return positionOrder[a] - positionOrder[b];
+    });
     coveredPostions.forEach(position => coveredPostionsHTML += `<div class="icon label-position-${position} me-1"></div>`)
     return `<div class="team col-5">
     ${playersHTML}
     <div class="mt-1 d-flex justify-content-between">
-        <div class="covered-positions d-flex">
+        <div class="covered-positions d-flex mt-2">
             ${coveredPostionsHTML}
         </div>
         <div class="total me-1 text-white">${totalLevels(team)}</div>
