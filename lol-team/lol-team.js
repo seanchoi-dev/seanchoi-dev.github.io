@@ -99,23 +99,6 @@ const numParticipantsEvent = () => {
     });
 }
 
-const initTeam = () => {
-    if (!window.localStorage.state) {
-        for (let i=0; i<10; i++) {
-            addPlayer(i);
-        }
-        numParticipantsEvent();
-        return;
-    }
-
-    numParticipantsEvent();
-
-    const stateFromStorage = JSON.parse(window.localStorage.state);
-    const players = stateFromStorage.players;
-    players.forEach((p, i) => addPlayer(i, p));
-    setLevel('.level-participant');
-};
-
 const positionEventListener = () =>  {
     const positionInputs = document.querySelectorAll('.position-item');
     positionInputs.forEach((pi) => {
@@ -125,10 +108,10 @@ const positionEventListener = () =>  {
             const label = document.getElementById(`label_position_${pi.dataset.position}_${index}`);
             const labelAll = playerPositionEl.querySelector('label');
             const inputAll = playerPositionEl.querySelector('input');
-            labelAll.classList.remove('active');
+            labelAll.classList.remove('active', 'level-hover');
             inputAll.checked = false;
             if (pi === inputAll) {
-                playerPositionEl.querySelectorAll('label').forEach(l => l.classList.remove('active'));
+                playerPositionEl.querySelectorAll('label').forEach(l => l.classList.remove('active', 'level-hover'));
                 playerPositionEl.querySelectorAll('input').forEach(i => i.checked = false);
                 inputAll.checked = true;
             }
@@ -202,9 +185,25 @@ const clearAll = () => {
     setLevel('.participant-div');
 };
 
+const initTeam = () => {
+    if (window.localStorage.state) {
+        const stateFromStorage = JSON.parse(window.localStorage.state);
+        const players = stateFromStorage.players;
+        players.forEach((p, i) => addPlayer(i, p));
+    } else {
+        for (let i=0; i<10; i++) {
+            addPlayer(i);
+        }
+    }
+
+    numParticipantsEvent();
+    positionEventListener();
+    setLevel('.level-participant');
+};
+
+
 document.addEventListener('DOMContentLoaded', function () {
     initTeam();
-    positionEventListener();
     updateState();
 }, false);
 
