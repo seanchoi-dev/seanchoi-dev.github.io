@@ -89,3 +89,7 @@ main {
 .input-error {
   border: 1px solid red;  
 }
+
+.import-icon {
+    text-decoration: none;
+}
