@@ -1,17 +1,3 @@
-const levelMap = {
-    1: 'B',
-    2: 'BS',
-    3: 'S',
-    4: 'SG',
-    5: 'G',
-    6: 'GP',
-    7: 'P',
-    8: 'PD',
-    9: 'D',
-    10: 'DM',
-    11: 'M',
-    12: 'H'
-};
 const positionOrder = {
   'top': 1,
   'jungle': 2,

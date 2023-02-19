@@ -9,7 +9,30 @@ let state = {
     players: [],
     balancedBy: 'tier',
     numOfPlayers: 10,
+    levelConfig: {},
 };
+
+const defaultLevelMap = {
+    1: 'B',
+    2: 'BS',
+    3: 'S',
+    4: 'SG',
+    5: 'G',
+    6: 'GP',
+    7: 'P',
+    8: 'PD',
+    9: 'D',
+    10: 'DM',
+    11: 'M',
+    12: 'GM',
+    13: 'C',
+};
+
+const getLevelByLabel = (labelName) => {
+    console.log(document.querySelector(`label[for=level_config_${labelName.toUpperCase()}]`));
+    return document.querySelector(`label[for=level_config_${labelName.toUpperCase()}]`)?.nextElementSibling.value;
+};
+
 const getNewParticipant = (index, player) => {
     return `
 <div id="mix_players__${index}" class="participant-div participant-div-form row">
@@ -34,38 +57,67 @@ const getNewParticipant = (index, player) => {
             <input name="mix.players.${index}.position.support" type="checkbox" class="position-item" data-index="${index}" data-position="support" id="position_support_${index}" ${player.position.includes('support') ? 'checked' : ''}>
         </div>
     </div>
-    <div class="col-md-6 no-padding-left">
+    <div class="col-md-6">
         <div id="mix_players_${index}_level" class="level-participant d-block">
+            <label for="mix_players_${index}_level_0" class="required">I</label>
+            <input type="radio" id="mix_players_${index}_level_0" name="mix.players.${index}.level" required="required" value="0" class="${player.level === (getLevelByLabel('I') || 0) ? 'level-hover" checked="checked' : ''}">
             <label for="mix_players_${index}_level_1" class="required">B</label>
-            <input type="radio" id="mix_players_${index}_level_1" name="mix.players.${index}.level" required="required" value="1" class="${player.level === 1 ? 'level-hover" checked="checked' : ''}">
+            <input type="radio" id="mix_players_${index}_level_1" name="mix.players.${index}.level" required="required" value="1" class="${player.level === (getLevelByLabel('B') || 1) ? 'level-hover" checked="checked' : ''}">
             <label for="mix_players_${index}_level_2" class="required">BS</label>
-            <input type="radio" id="mix_players_${index}_level_2" name="mix.players.${index}.level" required="required" value="2" class="${player.level === 2 ? 'level-hover" checked="checked' : ''}">
+            <input type="radio" id="mix_players_${index}_level_2" name="mix.players.${index}.level" required="required" value="2" class="${player.level === (getLevelByLabel('BS') || 2) ? 'level-hover" checked="checked' : ''}">
             <label for="mix_players_${index}_level_3" class="required">S</label>
-            <input type="radio" id="mix_players_${index}_level_3" name="mix.players.${index}.level" required="required" value="3" class="${player.level === 3 ? 'level-hover" checked="checked' : ''}">
+            <input type="radio" id="mix_players_${index}_level_3" name="mix.players.${index}.level" required="required" value="3" class="${player.level === (getLevelByLabel('S') || 3) ? 'level-hover" checked="checked' : ''}">
             <label for="mix_players_${index}_level_4" class="required">SG</label>
-            <input type="radio" id="mix_players_${index}_level_4" name="mix.players.${index}.level" required="required" value="4" class="${player.level === 4 ? 'level-hover" checked="checked' : ''}">
+            <input type="radio" id="mix_players_${index}_level_4" name="mix.players.${index}.level" required="required" value="4" class="${player.level === (getLevelByLabel('SG') || 4) ? 'level-hover" checked="checked' : ''}">
             <label for="mix_players_${index}_level_5" class="required">G</label>
-            <input type="radio" id="mix_players_${index}_level_5" name="mix.players.${index}.level" required="required" value="5" class="${player.level === 5 ? 'level-hover" checked="checked' : ''}">
+            <input type="radio" id="mix_players_${index}_level_5" name="mix.players.${index}.level" required="required" value="5" class="${player.level === (getLevelByLabel('G') || 5) ? 'level-hover" checked="checked' : ''}">
             <label for="mix_players_${index}_level_6" class="required">GP</label>
-            <input type="radio" id="mix_players_${index}_level_6" name="mix.players.${index}.level" required="required" value="6" class="${player.level === 6 ? 'level-hover" checked="checked' : ''}">
+            <input type="radio" id="mix_players_${index}_level_6" name="mix.players.${index}.level" required="required" value="6" class="${player.level === (getLevelByLabel('GP') || 6) ? 'level-hover" checked="checked' : ''}">
             <label for="mix_players_${index}_level_7" class="required">P</label>
-            <input type="radio" id="mix_players_${index}_level_7" name="mix.players.${index}.level" required="required" value="7" class="${player.level === 7 ? 'level-hover" checked="checked' : ''}">
+            <input type="radio" id="mix_players_${index}_level_7" name="mix.players.${index}.level" required="required" value="7" class="${player.level === (getLevelByLabel('P') || 7) ? 'level-hover" checked="checked' : ''}">
             <label for="mix_players_${index}_level_8" class="required">PD</label>
-            <input type="radio" id="mix_players_${index}_level_8" name="mix.players.${index}.level" required="required" value="8" class="${player.level === 8 ? 'level-hover" checked="checked' : ''}">
+            <input type="radio" id="mix_players_${index}_level_8" name="mix.players.${index}.level" required="required" value="8" class="${player.level === (getLevelByLabel('PD') || 8) ? 'level-hover" checked="checked' : ''}">
             <label for="mix_players_${index}_level_9" class="required">D</label>
-            <input type="radio" id="mix_players_${index}_level_9" name="mix.players.${index}.level" required="required" value="9" class="${player.level === 9 ? 'level-hover" checked="checked' : ''}">
+            <input type="radio" id="mix_players_${index}_level_9" name="mix.players.${index}.level" required="required" value="9" class="${player.level === (getLevelByLabel('D') || 9) ? 'level-hover" checked="checked' : ''}">
             <label for="mix_players_${index}_level_10" class="required">DM</label>
-            <input type="radio" id="mix_players_${index}_level_10" name="mix.players.${index}.level" required="required" value="10" class="${player.level === 10 ? 'level-hover" checked="checked' : ''}">
+            <input type="radio" id="mix_players_${index}_level_10" name="mix.players.${index}.level" required="required" value="10" class="${player.level === (getLevelByLabel('DM') || 10) ? 'level-hover" checked="checked' : ''}">
             <label for="mix_players_${index}_level_11" class="required">M</label>
-            <input type="radio" id="mix_players_${index}_level_11" name="mix.players.${index}.level" required="required" value="11" class="${player.level === 11 ? 'level-hover" checked="checked' : ''}">
+            <input type="radio" id="mix_players_${index}_level_11" name="mix.players.${index}.level" required="required" value="11" class="${player.level === (getLevelByLabel('M') || 11) ? 'level-hover" checked="checked' : ''}">
             <label for="mix_players_${index}_level_12" class="required">GM</label>
-            <input type="radio" id="mix_players_${index}_level_12" name="mix.players.${index}.level" required="required" value="12" class="${player.level === 12 ? 'level-hover" checked="checked' : ''}">
+            <input type="radio" id="mix_players_${index}_level_12" name="mix.players.${index}.level" required="required" value="12" class="${player.level === (getLevelByLabel('GM') || 12) ? 'level-hover" checked="checked' : ''}">
             <label for="mix_players_${index}_level_13" class="required">C</label>
-            <input type="radio" id="mix_players_${index}_level_13" name="mix.players.${index}.level" required="required" value="13" class="${player.level === 13 ? 'level-hover" checked="checked' : ''}">
+            <input type="radio" id="mix_players_${index}_level_13" name="mix.players.${index}.level" required="required" value="13" class="${player.level === (getLevelByLabel('C') || 13) ? 'level-hover" checked="checked' : ''}">
         </div>
     </div>
 </div>`;
 }
+const levelConfig = () => {
+    const levelConfigEl = document.querySelector('.level-config');
+    document.querySelector('.level-participant').querySelectorAll('label').forEach(l => {
+        const configItem = document.createElement('div');
+        configItem.classList.add('d-flex', 'flex-column', 'align-items-center');
+        
+        const inputId = `level_config_${l.textContent}`;
+        
+        const label = document.createElement('label');
+        label.innerHTML = l.textContent;
+        label.setAttribute('for', inputId);
+        
+        const input = document.createElement('input');
+        input.id = inputId;
+        input.value = state.levelConfig[l.textContent] || l.nextElementSibling.value;
+        l.nextElementSibling.value = input.value;
+        input.addEventListener('change', () => {
+            state.levelConfig[l.textContent] = input.value;
+            saveState();
+        });
+
+        configItem.append(label);
+        configItem.append(input);
+        levelConfigEl.append(configItem);
+    });
+};
+
 const addPlayer = (index, player) => {
     const players = document.getElementById('mix_players');
     const div = document.createElement('div');
@@ -83,7 +135,7 @@ const removePlayer = (index) => {
 
 const numParticipantsEvent = () => {
     const participantsSelect = document.getElementById('nb-participants');
-    participantsSelect.value = window.localStorage.state ? JSON.parse(window.localStorage.state).numOfPlayers : 10;
+    participantsSelect.value = state.numOfPlayers || 10;
     participantsSelect.addEventListener('change', (e) => {     
         const currentPlayers = document.querySelectorAll('.participant-div');
         if (currentPlayers.length < participantsSelect.value) {
@@ -135,8 +187,9 @@ importBtn.addEventListener('click', () => {
 });
 
 const updateState = () => {
-    document.querySelectorAll('#mix_players input').forEach(input => input.addEventListener('change', (e) => {
+    document.querySelectorAll('#mix_players input, .level-config input').forEach(input => input.addEventListener('change', (e) => {
         const playerIndex = input.closest('.participant-div').id.split('__')[1];
+        console.log(playerIndex);
         if (input.id.includes('name')) {
             state.players[playerIndex].name = input.value;            
         } else if (input.id.includes('level')) {
@@ -182,12 +235,14 @@ const submitted = () => {
 }
 const clearAll = () => {
     document.getElementById('mix_players').innerHTML = '';
+    document.querySelector('.level-config').innerHTML = '';
     window.localStorage.removeItem('state');
     document.getElementById('nb-participants').value = 10;
     state = {
         players: [],
         balancedBy: 'tier',
         numOfPlayers: 10,
+        levelConfig: state.levelConfig,
     };
     initTeam();
     saveState();
@@ -196,18 +251,19 @@ const clearAll = () => {
 
 const initTeam = () => {
     if (window.localStorage.state) {
-        const stateFromStorage = JSON.parse(window.localStorage.state);
-        const players = stateFromStorage.players;
+        state = JSON.parse(window.localStorage.state);
+        const players = state.players;
         players.forEach((p, i) => addPlayer(i, p));
     } else {
         for (let i=0; i<10; i++) {
             addPlayer(i);
         }
     }
-
+    
     numParticipantsEvent();
     positionEventListener();
     updateState();
+    levelConfig();
     setLevel('.level-participant');
 };
 

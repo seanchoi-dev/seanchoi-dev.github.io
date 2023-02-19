@@ -28,47 +28,43 @@
                                     </div> -->
                                 </div>
                                 <div class="container text-white">
-                                    <h5 class="my-1 text-end">Beta v0.9</h5>
+                                    <h5 class="my-1 text-end">Beta v0.91</h5>
                                 </div>
                             </div>
                         </div>
                     </div>
                     <div class="bg-grey">
                         <div class="container padding-bloc position-relative">
-                            <div class="row">
-                                <div class="col-md-12">
-                                    <div class="form-group">
-                                        <select class="head-select" id="nb-participants" control-id="ControlID-3">
-                                            <option value="2">2</option>
-                                            <option value="4">4</option>
-                                            <option value="6">6</option>
-                                            <option value="8">8</option>
-                                            <option value="10" selected>10</option>
-                                            <option value="12">12</option>
-                                            <option value="14">14</option>
-                                            <option value="16">16</option>
-                                            <option value="18">18</option>
-                                            <option value="20">20</option>
-                                        </select>
-                                        <label for="nb-participants" class="head-label pr-15">Participants</label>
-                                        <a class="import-icon toggle-it" data-target="#import-participant" data-toggle="tooltip" data-placement="bottom" title="Add participants by textarea" data-original-title="Copy-paste participants">
-                                            <span><i class="fa fa-clipboard"></i></span>
-                                        </a>
-                                        <a class="import-icon toggle-it" title="Clear all participants" onclick="clearAll()">
-                                            <span><i class="fa fa-trash"></i></span>
-                                        </a>
-                                    </div>
-
-                                    <div id="import-participant" class="form-group">
-                                        <label for="import-participant-list">Copy and paste a list of participants. One participant per line.</label>
-                                        <textarea id="import-participant-list" class="form-control textarea-import" rows="10" control-id="ControlID-4"></textarea>
-                                        <a id="import-p-button" class="btn orange-btn middle-keamk-btn">Import Participants</a>
-                                    </div>
-                                    <div class="text-end tier-list me-5">Bronze, Bronze-Silver, Silver, Silver-Gold ...... Master, Heaven</div>
-
-                                    <div id="mix_players"></div>
+                            <div class="general-config row align-items-center">
+                                <div class="form-group col-6">
+                                    <select class="head-select" id="nb-participants" control-id="ControlID-3">
+                                        <option value="2">2</option>
+                                        <option value="4">4</option>
+                                        <option value="6">6</option>
+                                        <option value="8">8</option>
+                                        <option value="10" selected>10</option>
+                                        <option value="12">12</option>
+                                        <option value="14">14</option>
+                                        <option value="16">16</option>
+                                        <option value="18">18</option>
+                                        <option value="20">20</option>
+                                    </select>
+                                    <label for="nb-participants" class="head-label pr-15">Participants</label>
+                                    <a class="import-icon toggle-it" data-target="#import-participant" data-toggle="tooltip" data-placement="bottom" title="Add participants by textarea" data-original-title="Copy-paste participants">
+                                        <span><i class="fa fa-clipboard"></i></span>
+                                    </a>
+                                    <a class="import-icon toggle-it" title="Clear all participants" onclick="clearAll()">
+                                        <span><i class="fa fa-trash"></i></span>
+                                    </a>
                                 </div>
+                                <div class="level-config col-6 d-flex"></div>
                             </div>
+                            <div id="import-participant" class="form-group">
+                                <label for="import-participant-list">Copy and paste a list of participants. One participant per line.</label>
+                                <textarea id="import-participant-list" class="form-control textarea-import" rows="10" control-id="ControlID-4"></textarea>
+                                <a id="import-p-button" class="btn orange-btn middle-keamk-btn">Import Participants</a>
+                            </div>
+                            <div id="mix_players"></div>
                             <div
                                 class="padding-top ad-div">
                                 <!-- leaderboard-bottom -->
