@@ -1,1 +1,2 @@
-https://seanchoi-dev.github.io/menu
+- https://seanchoi-dev.github.io/menu Cook Menu Decider with google spreadsheet API
+- https://seanchoi-dev.github.io/lol-team League of Legend team balacer
