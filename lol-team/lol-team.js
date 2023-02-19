@@ -13,7 +13,7 @@ let state = {
 const getNewParticipant = (index, player) => {
     return `
 <div id="mix_players__${index}" class="participant-div participant-div-form row">
-    <div class="col-md-4">
+    <div class="col-md-3">
         <div class="input-group">
             <input type="text" id="mix_players_${index}_name" name="mix.players.${index}.name" class="form-control input-participants" placeholder="Player ${index+1}" value="${player.name}" required>
         </div>
@@ -34,7 +34,7 @@ const getNewParticipant = (index, player) => {
             <input name="mix.players.${index}.position.support" type="checkbox" class="position-item" data-index="${index}" data-position="support" id="position_support_${index}" ${player.position.includes('support') ? 'checked' : ''}>
         </div>
     </div>
-    <div class="col-md-5 no-padding-left">
+    <div class="col-md-6 no-padding-left">
         <div id="mix_players_${index}_level" class="level-participant d-block">
             <label for="mix_players_${index}_level_1" class="required">B</label>
             <input type="radio" id="mix_players_${index}_level_1" name="mix.players.${index}.level" required="required" value="1" class="${player.level === 1 ? 'level-hover" checked="checked' : ''}">
@@ -58,8 +58,10 @@ const getNewParticipant = (index, player) => {
             <input type="radio" id="mix_players_${index}_level_10" name="mix.players.${index}.level" required="required" value="10" class="${player.level === 10 ? 'level-hover" checked="checked' : ''}">
             <label for="mix_players_${index}_level_11" class="required">M</label>
             <input type="radio" id="mix_players_${index}_level_11" name="mix.players.${index}.level" required="required" value="11" class="${player.level === 11 ? 'level-hover" checked="checked' : ''}">
-            <label for="mix_players_${index}_level_12" class="required">H</label>
+            <label for="mix_players_${index}_level_12" class="required">GM</label>
             <input type="radio" id="mix_players_${index}_level_12" name="mix.players.${index}.level" required="required" value="12" class="${player.level === 12 ? 'level-hover" checked="checked' : ''}">
+            <label for="mix_players_${index}_level_13" class="required">C</label>
+            <input type="radio" id="mix_players_${index}_level_13" name="mix.players.${index}.level" required="required" value="13" class="${player.level === 13 ? 'level-hover" checked="checked' : ''}">
         </div>
     </div>
 </div>`;
