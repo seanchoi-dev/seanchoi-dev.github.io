@@ -4,11 +4,12 @@
     background-repeat: no-repeat;
 }
 
-.label-position:hover,
-.label-position:active,
-.label-position:focus,
-.label-position.active {
+label:hover,
+label:active,
+label:focus,
+label.active {
     background-color: #f97352;
+    color: #fff;
 }
 
 .label-position-all {
@@ -108,7 +109,6 @@ main {
 
 .level-config label {
     cursor: pointer;
-    color: var(--bs-dark);
 }
 
 .level-config label,
@@ -117,4 +117,6 @@ main {
     width: 36px;
     text-align: center;
     margin-right: 5.5px;
-}
+} 
+
+/*  opacity update */
