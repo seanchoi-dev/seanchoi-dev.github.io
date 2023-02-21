@@ -214,9 +214,11 @@ const clearAll = () => {
 };
 
 const initTeam = () => {
-    levelConfig();
     if (window.localStorage.state) {
         state = JSON.parse(window.localStorage.state);
+        if (!state.levelConfig) {
+            state.levelConfig = defaultLevelMap;
+        }
     }
     const players = state.players;
     if (players.length) {
@@ -227,6 +229,7 @@ const initTeam = () => {
         }
     }
     numParticipantsEvent();
+    levelConfig();
 };
 
 
