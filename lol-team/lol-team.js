@@ -28,13 +28,13 @@ let state = {
     players: [],
     balancedBy: 'tier',
     numOfPlayers: 10,
-    levelConfig: {},
+    levelConfig: defaultLevelMap,
 };
 
 const getNewParticipant = (index, player) => {
     let levelEls = '';
-    Object.keys(defaultLevelMap).forEach(k => {
-        const levelValue = state.levelConfig[k] || defaultLevelMap[k];
+    Object.keys(state.levelConfig).forEach(k => {
+        const levelValue = state.levelConfig[k];
         levelEls += `
         <label for="mix_players_${index}_level_${k}" class="required ${player.level === levelValue ? 'active' : ''}">${k}</label>
         <input type="radio" id="mix_players_${index}_level_${k}" class="level-input level-input-${k}" name="mix.players.${index}.level" required="required" value="${levelValue}" ${player.level === levelValue ? 'checked' : ''}>
@@ -72,7 +72,7 @@ const getNewParticipant = (index, player) => {
 }
 const levelConfig = () => {
     const levelConfigEl = document.querySelector('.level-config');
-    Object.keys(defaultLevelMap).forEach(k => {
+    Object.keys(state.levelConfig).forEach(k => {
         const configItem = document.createElement('div');
         configItem.classList.add('d-flex', 'flex-column', 'align-items-center');
         
@@ -84,7 +84,7 @@ const levelConfig = () => {
         
         const input = document.createElement('input');
         input.id = inputId;
-        input.value = state.levelConfig[k] || defaultLevelMap[k];
+        input.value = state.levelConfig[k];
         input.addEventListener('change', () => {
             state.levelConfig[k] = parseInt(input.value);
             document.querySelectorAll(`.level-input-${k}`).forEach(levelInput => levelInput.value = input.value);
@@ -177,7 +177,6 @@ const saveState = () => {
         p.querySelectorAll('.position-item:checked').forEach(i => positions.push(i.dataset.position));
         state.players.push(new Player(name, positions, parseInt(p.querySelector('.level-input:checked').value)));
     });
-    log(state.players);
     window.localStorage.state = JSON.stringify(state);
 }
 
@@ -208,7 +207,7 @@ const clearAll = () => {
         players: [],
         balancedBy: 'tier',
         numOfPlayers: 10,
-        levelConfig: state.levelConfig,
+        levelConfig: defaultLevelMap,
     };
     saveState();
     initTeam();
