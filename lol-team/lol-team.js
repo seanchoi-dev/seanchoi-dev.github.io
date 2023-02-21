@@ -214,6 +214,7 @@ const clearAll = () => {
 };
 
 const initTeam = () => {
+    levelConfig();
     if (window.localStorage.state) {
         state = JSON.parse(window.localStorage.state);
     }
@@ -226,7 +227,6 @@ const initTeam = () => {
         }
     }
     numParticipantsEvent();
-    levelConfig();
 };
 
 
