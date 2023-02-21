@@ -37,7 +37,7 @@ const getNewParticipant = (index, player) => {
         const levelValue = state.levelConfig[k] || defaultLevelMap[k];
         levelEls += `
         <label for="mix_players_${index}_level_${k}" class="required ${player.level === levelValue ? 'active' : ''}">${k}</label>
-        <input type="radio" id="mix_players_${index}_level_${k}" class="level-input" name="mix.players.${index}.level" required="required" value="${levelValue}" ${player.level === levelValue ? 'checked' : ''}">
+        <input type="radio" id="mix_players_${index}_level_${k}" class="level-input level-input-${k}" name="mix.players.${index}.level" required="required" value="${levelValue}" ${player.level === levelValue ? 'checked' : ''}>
         `
     });
     return `
@@ -86,7 +86,8 @@ const levelConfig = () => {
         input.id = inputId;
         input.value = state.levelConfig[k] || defaultLevelMap[k];
         input.addEventListener('change', () => {
-            state.levelConfig[k] = input.value;
+            state.levelConfig[k] = parseInt(input.value);
+            document.querySelectorAll(`.level-input-${k}`).forEach(levelInput => levelInput.value = input.value);
             saveState();
         });
 
@@ -102,9 +103,7 @@ const addPlayer = (index, player) => {
     const p = player || new Player('', ['all'], 5);
     div.innerHTML = getNewParticipant(index, p);
     players.append(div);
-    div.querySelector('.position-item').addEventListener('change', (e) => {
-        const input = div.querySelector('input');
-        const index = input.dataset.index;
+    div.querySelectorAll('.position-item').forEach(input => input.addEventListener('change', () => {
         const playerPositionEl = document.getElementById(`mix_players_${index}_position`);
         const label = document.getElementById(`label_position_${input.dataset.position}_${index}`);
         const labelAll = playerPositionEl.querySelector('label');
@@ -117,8 +116,9 @@ const addPlayer = (index, player) => {
             inputAll.checked = true;
         }
         label.classList.toggle('active');
-    });
-
+        saveState();
+    }));
+    div.querySelectorAll('.input-participants').forEach(i => i.addEventListener('change', () => saveState()));
     div.querySelectorAll('.level-input').forEach(i => {
         i.addEventListener('change', e => {
             div.querySelectorAll('.level-input').forEach(ii => {
@@ -127,9 +127,9 @@ const addPlayer = (index, player) => {
                     ii.previousElementSibling.classList.add('active');
                 }
             });
-        })
+            saveState();
+        });
     });
-    saveState();
 };
 
 const removePlayer = (index) => {
@@ -153,8 +153,8 @@ const numParticipantsEvent = () => {
             }
         }
         state.numOfPlayers = participantsSelect.value;
+        saveState();
     });
-    saveState();
 }
 
 const importBtn = document.getElementById('import-p-button');
@@ -170,11 +170,14 @@ importBtn.addEventListener('click', () => {
 });
 
 const saveState = () => {
-    // state.players = [];
-    // document.querySelectorAll('.participant-div').forEach(p => {
-    //     const name = p.querySelector('.input-participants').value;
-    //     // state.players.push(new player());
-    // });
+    state.players = [];
+    document.querySelectorAll('.participant-div').forEach(p => {
+        const name = p.querySelector('.input-participants').value;
+        const positions = [];
+        p.querySelectorAll('.position-item:checked').forEach(i => positions.push(i.dataset.position));
+        state.players.push(new Player(name, positions, parseInt(p.querySelector('.level-input:checked').value)));
+    });
+    log(state.players);
     window.localStorage.state = JSON.stringify(state);
 }
 
