@@ -1,3 +1,11 @@
+.bg-grey-opacity {
+    background-color: #f0f0f0d4;
+}
+
+.bg-dark-grey-opacity {
+    background-color: #43474db3;
+}
+
 .label-position {
     background-color: #43474d;
     background-position: center;
@@ -9,7 +17,10 @@ label:active,
 label:focus,
 label.active {
     background-color: #f97352;
-    color: #fff;
+    color: #555;
+}
+.head-label:hover {
+    background: inherit;
 }
 
 .label-position-all {
@@ -42,7 +53,6 @@ label.active {
     font-weight: 400;
     color: #333;
     margin-bottom: 0;
-    background-color: #43474d;
 }
 .level {
     width: 65.1px;
@@ -108,6 +118,7 @@ main {
     bottom: 35px;
     border: 1px solid;
     border-radius: 30px;
+    background-color: #f1f3f4;
 }
 
 .level-config label {
