@@ -4,11 +4,12 @@
     background-repeat: no-repeat;
 }
 
-.label-position:hover,
-.label-position:active,
-.label-position:focus,
-.label-position.active {
+label:hover,
+label:active,
+label:focus,
+label.active {
     background-color: #f97352;
+    color: #fff;
 }
 
 .label-position-all {
@@ -56,6 +57,9 @@
     background-repeat: no-repeat;
     width: 35px;
     height: 35px;
+}
+.social-icon {
+    max-width: 30px;
 }
 .vs img {
     max-width: 90%;
@@ -105,3 +109,17 @@ main {
     border: 1px solid;
     border-radius: 30px;
 }
+
+.level-config label {
+    cursor: pointer;
+}
+
+.level-config label,
+.level-config input {
+    font-size: 1rem;;
+    width: 36px;
+    text-align: center;
+    margin-right: 5.5px;
+} 
+
+/*  opacity update */

@@ -1,17 +1,7 @@
-const levelMap = {
-    1: 'B',
-    2: 'BS',
-    3: 'S',
-    4: 'SG',
-    5: 'G',
-    6: 'GP',
-    7: 'P',
-    8: 'PD',
-    9: 'D',
-    10: 'DM',
-    11: 'M',
-    12: 'H'
-};
+const log = m => console.log(m);
+const getKeyByValue = (object, value) => {
+  return Object.keys(object).find(key => object[key] === value);
+}
 const positionOrder = {
   'top': 1,
   'jungle': 2,
@@ -20,11 +10,10 @@ const positionOrder = {
   'support': 5,
   'all': 6,
 }
-
+let state = {};
 function balanceTeamsByLevels(players) {
     // Shuffle the players array
     players = shuffle(players);
-    console.log(players);
     // players.sort((a, b) => b.level - a.level);
   
     // Determine the number of players per team
@@ -108,7 +97,7 @@ const generatePlayer = (player) => {
             <div class="position d-flex me-2">
                 ${positionsHTML}
             </div>
-            <div class="level bg-warning p-1 d-flex justify-content-between"><div>${levelMap[player.level]}</div><div><small>(${player.level})</small></div></div>
+            <div class="level bg-warning p-1 d-flex justify-content-between"><div>${getKeyByValue(state.levelConfig, player.level)}</div><div><small>(${player.level})</small></div></div>
         </div>
     </div>`;
 };
@@ -138,7 +127,7 @@ const vs = () => {
     return `<div class="vs col-2 text-white d-flex align-items-center justify-content-center"><img src="../lib/images/vs.png"></div>`;
 }
 document.addEventListener('DOMContentLoaded', function () {
-    const state = JSON.parse(window.localStorage.state);
+    state = JSON.parse(window.localStorage.state);
     const teams = balanceTeamsByLevels(state.players);
     //console.log(teams, totalLevels(teams.team1), totalLevels(teams.team2));
     const result = document.getElementById('result_row');
