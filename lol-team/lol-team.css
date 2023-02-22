@@ -172,4 +172,12 @@ main {
 
 .covered-positions {
     min-width: 195px;
+    position: relative;
+}
+
+.covered-positions.warning::after {
+    content: 'Missing position';
+    position: absolute;
+    color: #fff;
+    right: -150px;
 }

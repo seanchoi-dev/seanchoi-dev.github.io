@@ -133,7 +133,7 @@ const generateTeam = (team) => {
     return `<div class="team col-5">
     ${playersHTML}
     <div class="mt-1 d-flex justify-content-between">
-        <div class="covered-positions d-flex mt-2 ${positionCounts < 5 ? 'border border-3 border-danger' : ''}">
+        <div class="covered-positions d-flex mt-2 ${positionCounts < 5 ? 'warning border border-3 border-danger' : ''}">
             ${coveredPostionsHTML}
         </div>
         <div class="total me-1 text-white">${totalLevels(team)}</div>
