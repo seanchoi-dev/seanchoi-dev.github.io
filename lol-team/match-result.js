@@ -98,6 +98,7 @@ const generatePlayer = (player) => {
                 ${positionsHTML}
             </div>
             <div class="level bg-warning p-1 d-flex justify-content-between"><div>${getKeyByValue(state.levelConfig, player.level)}</div><div><small>(${player.level})</small></div></div>
+            <div><a href="#">OPGG</a></div>
         </div>
     </div>`;
 };
@@ -137,16 +138,31 @@ const generateTeam = (team) => {
             ${coveredPostionsHTML}
         </div>
         <div class="total me-1 text-white">${totalLevels(team)}</div>
-    </div>    
+    </div>
 </div>`;
 }
 const vs = () => {
     return `<div class="vs col-2 text-white d-flex align-items-center justify-content-center"><img src="../lib/images/vs.png"></div>`;
 }
+
+const lookupOpgg = async (name) => {
+  const res = await fetch(`https://www.op.gg/summoners/na/${name}`);
+  const text = await res.text();
+  return text.includes('<h1 class="summoner-name"');
+}
+
+const addOpggLinks = () => {
+  document.querySelectorAll('.player').forEach(p => {
+    const name = p.querySelector('.name').textContent;
+
+  });
+};
+
 document.addEventListener('DOMContentLoaded', function () {
     state = JSON.parse(window.localStorage.state);
     const teams = balanceTeamsByLevels(state.players);
     //console.log(teams, totalLevels(teams.team1), totalLevels(teams.team2));
     const result = document.getElementById('result_row');
     result.innerHTML = generateTeam(teams.team1) + vs() + generateTeam(teams.team2);
+    addOpggLinks();
 }, false);

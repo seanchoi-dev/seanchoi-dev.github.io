@@ -224,6 +224,6 @@ const initTeam = () => {
 
 document.addEventListener('DOMContentLoaded', function () {
     initTeam();
-    document.querySelector('audio').volume = 0.33;
+    document.querySelector('audio').volume = 0.25;
 }, false);
 
