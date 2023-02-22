@@ -1,15 +1,9 @@
-.bg-grey-opacity {
-    background-color: #f0f0f0d4;
+a {
+    cursor: pointer;
 }
 
-.bg-dark-grey-opacity {
-    background-color: #43474db3;
-}
-
-.label-position {
-    background-color: #43474d;
-    background-position: center;
-    background-repeat: no-repeat;
+label, select {
+    cursor: pointer;
 }
 
 label:hover,
@@ -17,10 +11,11 @@ label:active,
 label:focus,
 label.active {
     background-color: #f97352;
-    color: #555;
+    color: #fff;
 }
 .head-label:hover {
     background: inherit;
+    color: #000;
 }
 
 .label-position-all {
@@ -46,6 +41,81 @@ label.active {
 .label-position-support {
     background-image: url('../lib/images/icon-position-sup-wh.svg');
 }
+
+.bg-grey-opacity {
+    background-color: #f0f0f0d4;
+}
+
+.bg-dark-grey-opacity {
+    background-color: #43474db3;
+}
+
+.label-position, .level-participant label {
+    background-position: center;
+    background-repeat: no-repeat;
+    width: 36px;
+    height: 36px;
+    text-align: center;
+    font-size: 18px;
+    padding-top: 5px;
+    padding-bottom: 3px;
+    font-weight: 400;
+    margin-bottom: 0;
+    border-radius: 3px;
+}
+
+.label-position {
+    background-color: #43474d;
+}
+
+.level-participant label:not(.active) {
+    background-color: #fff;
+    color: #555;
+}
+
+.nm-as-row {
+    margin: 0 calc(-.5 * var(--bs-gutter-x));
+}
+
+.input-error {
+  border: 1px solid red;  
+}
+
+.trash-icon {
+    text-decoration: none;
+    font-size: 22px;
+    color: var(--bs-danger);
+}
+
+.trash-icon:hover {
+    background-color: var(--bs-secondary);
+    color: #fff;
+}
+
+.share-link {
+    font-size: 14px;
+}
+
+.audio-player {
+    position: absolute;
+    right: 60px;
+    bottom: 35px;
+    border: 1px solid;
+    border-radius: 30px;
+    background-color: #f1f3f4;
+}
+
+.level-config label {
+    cursor: pointer;
+}
+
+.level-config label,
+.level-config input {
+    font-size: 1rem;;
+    width: 36px;
+    text-align: center;
+} 
+
 
 /* for result */
 .result {
@@ -99,38 +169,3 @@ main {
     background-color: #00000066;
     
 }
-
-.nm-as-row {
-    margin: 0 calc(-.5 * var(--bs-gutter-x));
-}
-
-.input-error {
-  border: 1px solid red;  
-}
-
-.import-icon {
-    text-decoration: none;
-}
-
-.audio-player {
-    position: absolute;
-    right: 60px;
-    bottom: 35px;
-    border: 1px solid;
-    border-radius: 30px;
-    background-color: #f1f3f4;
-}
-
-.level-config label {
-    cursor: pointer;
-}
-
-.level-config label,
-.level-config input {
-    font-size: 1rem;;
-    width: 36px;
-    text-align: center;
-    margin-right: 5.5px;
-} 
-
-/*  opacity update */

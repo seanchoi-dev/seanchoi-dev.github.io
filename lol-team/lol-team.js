@@ -36,12 +36,12 @@ const getNewParticipant = (index, player) => {
     Object.keys(state.levelConfig).forEach(k => {
         const levelValue = state.levelConfig[k];
         levelEls += `
-        <label for="mix_players_${index}_level_${k}" class="required ${player.level === levelValue ? 'active' : ''}">${k}</label>
-        <input type="radio" id="mix_players_${index}_level_${k}" class="level-input level-input-${k}" name="mix.players.${index}.level" required="required" value="${levelValue}" ${player.level === levelValue ? 'checked' : ''}>
+        <label for="mix_players_${index}_level_${k}" class="${player.level === levelValue ? 'active' : ''}">${k}</label>
+        <input type="radio" id="mix_players_${index}_level_${k}" class="level-input level-input-${k} d-none" name="mix.players.${index}.level" required="required" value="${levelValue}" ${player.level === levelValue ? 'checked' : ''}>
         `
     });
     return `
-<div id="mix_players__${index}" class="participant-div participant-div-form row">
+<div id="mix_players__${index}" class="participant-div participant-div-form row mb-2">
     <div class="col-md-3">
         <div class="input-group">
             <input type="text" id="mix_players_${index}_name" name="mix.players.${index}.name" class="form-control input-participants" placeholder="Player ${index+1}" value="${player.name}" required>
@@ -50,21 +50,21 @@ const getNewParticipant = (index, player) => {
     <div class="col-md-3 positions">
         <div id="mix_players_${index}_position" class="d-flex align-items-end justify-content-center">
             <label for="position_all_${index}" id="label_position_all_${index}" class="mx-1 label-position label-position-all ${player.position.includes('all') ? 'active' : ''}"></label>
-            <input name="mix.players.${index}.position.all" type="checkbox" class="position-item" data-index="${index}" data-position="all" id="position_all_${index}" ${player.position.includes('all') ? 'checked' : ''}>
+            <input name="mix.players.${index}.position.all" type="checkbox" class="position-item d-none" data-index="${index}" data-position="all" id="position_all_${index}" ${player.position.includes('all') ? 'checked' : ''}>
             <label for="position_top_${index}" id="label_position_top_${index}" class="mx-1 label-position label-position-top ${player.position.includes('top') ? 'active' : ''}"></label>
-            <input name="mix.players.${index}.position.top" type="checkbox" class="position-item" data-index="${index}" data-position="top" id="position_top_${index}" ${player.position.includes('top') ? 'checked' : ''}>
+            <input name="mix.players.${index}.position.top" type="checkbox" class="position-item d-none" data-index="${index}" data-position="top" id="position_top_${index}" ${player.position.includes('top') ? 'checked' : ''}>
             <label for="position_jungle_${index}" id="label_position_jungle_${index}" class="mx-1 label-position label-position-jungle ${player.position.includes('jungle') ? 'active' : ''}"></label>
-            <input name="mix.players.${index}.position.jungle" type="checkbox" class="position-item" data-index="${index}" data-position="jungle" id="position_jungle_${index}" ${player.position.includes('jungle') ? 'checked' : ''}>
+            <input name="mix.players.${index}.position.jungle" type="checkbox" class="position-item d-none" data-index="${index}" data-position="jungle" id="position_jungle_${index}" ${player.position.includes('jungle') ? 'checked' : ''}>
             <label for="position_mid_${index}" id="label_position_mid_${index}" class="mx-1 label-position label-position-mid ${player.position.includes('mid') ? 'active' : ''}"></label>
-            <input name="mix.players.${index}.position.mid" type="checkbox" class="position-item" data-index="${index}" data-position="mid" id="position_mid_${index}" ${player.position.includes('mid') ? 'checked' : ''}>
+            <input name="mix.players.${index}.position.mid" type="checkbox" class="position-item d-none" data-index="${index}" data-position="mid" id="position_mid_${index}" ${player.position.includes('mid') ? 'checked' : ''}>
             <label for="position_adc_${index}" id="label_position_adc_${index}" class="mx-1 label-position label-position-adc ${player.position.includes('adc') ? 'active' : ''}"></label>
-            <input name="mix.players.${index}.position.adc" type="checkbox" class="position-item" data-index="${index}" data-position="adc" id="position_adc_${index}" ${player.position.includes('adc') ? 'checked' : ''}>
+            <input name="mix.players.${index}.position.adc" type="checkbox" class="position-item d-none" data-index="${index}" data-position="adc" id="position_adc_${index}" ${player.position.includes('adc') ? 'checked' : ''}>
             <label for="position_support_${index}" id="label_position_support_${index}" class="mx-1 label-position label-position-support ${player.position.includes('support') ? 'active' : ''}"></label>
-            <input name="mix.players.${index}.position.support" type="checkbox" class="position-item" data-index="${index}" data-position="support" id="position_support_${index}" ${player.position.includes('support') ? 'checked' : ''}>
+            <input name="mix.players.${index}.position.support" type="checkbox" class="position-item d-none" data-index="${index}" data-position="support" id="position_support_${index}" ${player.position.includes('support') ? 'checked' : ''}>
         </div>
     </div>
     <div class="col-md-6">
-        <div id="mix_players_${index}_level" class="level-participant d-block">
+        <div id="mix_players_${index}_level" class="level-participant d-flex gap-2">
             ${levelEls}
         </div>
     </div>
@@ -84,6 +84,7 @@ const levelConfig = () => {
         
         const input = document.createElement('input');
         input.id = inputId;
+        input.classList.add('border-0');
         input.value = state.levelConfig[k];
         input.addEventListener('change', () => {
             state.levelConfig[k] = parseInt(input.value);
@@ -156,18 +157,6 @@ const numParticipantsEvent = () => {
         saveState();
     });
 }
-
-const importBtn = document.getElementById('import-p-button');
-importBtn.addEventListener('click', () => {
-    const pList = document.getElementById('import-participant-list').value.split(/\n/);
-    let i = 0;
-    pList.forEach((value) => {
-        if (value) {
-            document.getElementById(`mix_players_${i}_name`).value = value;
-            i++;
-        }        
-    })
-});
 
 const saveState = () => {
     state.players = [];
