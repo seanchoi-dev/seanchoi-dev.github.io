@@ -169,3 +169,7 @@ main {
     background-color: #00000066;
     
 }
+
+.covered-positions {
+    min-width: 195px;
+}

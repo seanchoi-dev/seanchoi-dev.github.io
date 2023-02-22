@@ -106,6 +106,7 @@ const generateTeam = (team) => {
     let coveredPostionsHTML = '';
     let playersHTML = '';
     let allCounts = 0;
+    let positionCounts = 0;
     team.forEach(p => {
         playersHTML += generatePlayer(p)
         p.position.forEach(position => {
@@ -118,17 +119,21 @@ const generateTeam = (team) => {
     coveredPostions = [...(coveredPostions)].sort((a, b)=>{
       return positionOrder[a] - positionOrder[b];
     });
-    coveredPostions.forEach(position => coveredPostionsHTML += `<div class="icon label-position-${position} me-1"></div>`)
+    coveredPostions.forEach(position => {
+      coveredPostionsHTML += `<div class="icon label-position-${position} me-1"></div>`
+      positionCounts++;
+    });
     
     // For extra All positions
-    for (let i=0; i<allCounts-1; i++) {
+    for (let i=0; i < allCounts-1 && positionCounts < 5; i++) {
       coveredPostionsHTML += `<div class="icon label-position-all me-1"></div>`;
+      positionCounts++;
     }
 
     return `<div class="team col-5">
     ${playersHTML}
     <div class="mt-1 d-flex justify-content-between">
-        <div class="covered-positions d-flex mt-2">
+        <div class="covered-positions d-flex mt-2 ${positionCounts < 5 ? 'border border-3 border-danger' : ''}">
             ${coveredPostionsHTML}
         </div>
         <div class="total me-1 text-white">${totalLevels(team)}</div>
