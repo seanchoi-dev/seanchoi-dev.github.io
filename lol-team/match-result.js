@@ -97,8 +97,10 @@ const generatePlayer = (player) => {
             <div class="position d-flex me-2">
                 ${positionsHTML}
             </div>
-            <div class="level bg-warning p-1 d-flex justify-content-between"><div>${getKeyByValue(state.levelConfig, player.level)}</div><div><small>(${player.level})</small></div></div>
-            <div><a href="#">OPGG</a></div>
+            <div class="level bg-warning p-1 d-flex justify-content-between">
+              <div>${getKeyByValue(state.levelConfig, player.level)}</div>
+              <div><small>(${player.level})</small></div>
+            </div>
         </div>
     </div>`;
 };
@@ -139,6 +141,7 @@ const generateTeam = (team) => {
         </div>
         <div class="total me-1 text-white">${totalLevels(team)}</div>
     </div>
+    <div class="opgg-all mt-3"><a target="_blank" href="https://www.op.gg/multisearch/na?summoners="><img src="../lib/images/opgg.png"></a></div>
 </div>`;
 }
 const vs = () => {
@@ -146,23 +149,38 @@ const vs = () => {
 }
 
 const lookupOpgg = async (name) => {
-  const res = await fetch(`https://www.op.gg/summoners/na/${name}`);
+  const target = `https://www.op.gg/summoners/na/${name}`;
+  const res = await fetch(target);
   const text = await res.text();
   return text.includes('<h1 class="summoner-name"');
 }
 
-const addOpggLinks = () => {
-  document.querySelectorAll('.player').forEach(p => {
+const addOpggLinks = (teamIndex) => {
+  const team = document.querySelectorAll('.team')[teamIndex];
+  const opggForAll = team.querySelector('.opgg-all a');
+  team.querySelectorAll('.player').forEach(async p => {
     const name = p.querySelector('.name').textContent;
-
+    const div = document.createElement('div');
+    div.classList.add('ps-2', 'pe-1');
+    if (await lookupOpgg(name)) {
+      div.innerHTML = `<a target="_blank" href="${`https://www.op.gg/summoners/na/${name}`}"><img src="../lib/images/opgg.png"></a>`;
+      const { search, pathname } = new URL(opggForAll.href);
+      const searchParams  = new URLSearchParams(search);
+      searchParams.set('summoners', `${searchParams.get('summoners')}, ${name}`);
+      opggForAll.href = `https://www.op.gg/multisearch/na?${searchParams.toString()}`;
+    } else {
+      div.innerHTML = '<img class="opacity-0" src="../lib/images/opgg.png" draggable="false">';     
+    }
+    p.querySelector('.position-level').append(div);
   });
 };
 
-document.addEventListener('DOMContentLoaded', function () {
+document.addEventListener('DOMContentLoaded', async() => {
     state = JSON.parse(window.localStorage.state);
     const teams = balanceTeamsByLevels(state.players);
     //console.log(teams, totalLevels(teams.team1), totalLevels(teams.team2));
     const result = document.getElementById('result_row');
     result.innerHTML = generateTeam(teams.team1) + vs() + generateTeam(teams.team2);
-    addOpggLinks();
+    addOpggLinks(0);
+    addOpggLinks(1);
 }, false);
