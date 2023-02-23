@@ -188,6 +188,19 @@ const submitted = () => {
     
     return false;
 }
+
+const importBtn = document.getElementById('import-p-button');
+importBtn.addEventListener('click', () => {
+    const pList = document.getElementById('import-participant-list').value.split(/\n/);
+    let i = 0;
+    pList.forEach((value) => {
+        if (value) {
+            document.getElementById(`mix_players_${i}_name`).value = value;
+            i++;
+        }        
+    })
+});
+
 const clearAll = () => {
     document.getElementById('mix_players').innerHTML = '';
     document.querySelector('.level-config').innerHTML = '';

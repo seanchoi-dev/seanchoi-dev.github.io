@@ -1,3 +1,4 @@
+const API_KEY = 'RGAPI-2b8cd8f5-dee8-43e0-8713-15afeb257e5b';
 const log = m => console.log(m);
 const getKeyByValue = (object, value) => {
   return Object.keys(object).find(key => object[key] === value);
@@ -101,6 +102,7 @@ const generatePlayer = (player) => {
               <div>${getKeyByValue(state.levelConfig, player.level)}</div>
               <div><small>(${player.level})</small></div>
             </div>
+            <div class="ps-2 pe-1 opgg-link"><img class="opacity-0" src="../lib/images/opgg.png" draggable="false"></div>
         </div>
     </div>`;
 };
@@ -148,11 +150,10 @@ const vs = () => {
     return `<div class="vs col-2 text-white d-flex align-items-center justify-content-center"><img src="../lib/images/vs.png"></div>`;
 }
 
-const lookupOpgg = async (name) => {
-  const target = `https://www.op.gg/summoners/na/${name}`;
+const isValidSummonerName = async (name) => {
+  const target = `https://na1.api.riotgames.com/lol/summoner/v4/summoners/by-name/${name}?api_key=${API_KEY}`;
   const res = await fetch(target);
-  const text = await res.text();
-  return text.includes('<h1 class="summoner-name"');
+  return res.ok;
 }
 
 const addOpggLinks = (teamIndex) => {
@@ -160,18 +161,17 @@ const addOpggLinks = (teamIndex) => {
   const opggForAll = team.querySelector('.opgg-all a');
   team.querySelectorAll('.player').forEach(async p => {
     const name = p.querySelector('.name').textContent;
-    const div = document.createElement('div');
-    div.classList.add('ps-2', 'pe-1');
-    if (await lookupOpgg(name)) {
-      div.innerHTML = `<a target="_blank" href="${`https://www.op.gg/summoners/na/${name}`}"><img src="../lib/images/opgg.png"></a>`;
-      const { search, pathname } = new URL(opggForAll.href);
+    const opgg = p.querySelector('.opgg-link');
+    if (await isValidSummonerName(name)) {
+      opgg.innerHTML = `<a target="_blank" href="${`https://www.op.gg/summoners/na/${name}`}"><img src="../lib/images/opgg.png"></a>`;
+      opgg.classList.remove('opacity-0');
+      const { search } = new URL(opggForAll.href);
       const searchParams  = new URLSearchParams(search);
       searchParams.set('summoners', `${searchParams.get('summoners')}, ${name}`);
       opggForAll.href = `https://www.op.gg/multisearch/na?${searchParams.toString()}`;
     } else {
-      div.innerHTML = '<img class="opacity-0" src="../lib/images/opgg.png" draggable="false">';     
+      opgg.innerHTML = '<img class="opacity-0" src="../lib/images/opgg.png" draggable="false">';     
     }
-    p.querySelector('.position-level').append(div);
   });
 };
 
