@@ -153,6 +153,14 @@ const vs = () => {
 const isValidSummonerName = async (name) => {
   const target = `https://na1.api.riotgames.com/lol/summoner/v4/summoners/by-name/${name}?api_key=${API_KEY}`;
   const res = await fetch(target);
+  
+  // For the case that Riot API rate limit is exausted.
+  if (res.status === 429) {
+    const opgg = `https://www.op.gg/summoners/na/${name}`;
+    const resOpgg = await fetch(opgg);
+    const text = await resOpgg.text();
+    return text.includes('<h1 class="summoner-name"');
+  }
   return res.ok;
 }
 
@@ -175,12 +183,45 @@ const addOpggLinks = (teamIndex) => {
   });
 };
 
+const utf8ToB64 = (str) => window.btoa(unescape(encodeURIComponent(str)));
+const b64ToUtf8 = (str) => decodeURIComponent(escape(window.atob(str)));
+const parseEncodedState = (encodedState) => {
+    try {
+      return JSON.parse(b64ToUtf8(decodeURIComponent(encodedState)));
+    } catch (e) {
+      console.error(e);
+    }
+    return null;
+}
+const getUrl = (state) => {
+    const url = window.location.href.split('#')[0];
+    return `${url}#${utf8ToB64(JSON.stringify(state))}`;
+};
+
+const copyState = async () => {
+    try {
+        const blob = new Blob([getUrl(state)], { type: 'text/plain' });
+        const data = [new ClipboardItem({ [blob.type]: blob })];
+        await navigator.clipboard.write(data);
+        alert('Share URL is copied to clipboard.');
+    } catch (err) {
+        console.error(err.name, err.message);
+    }
+    return false;
+}
+
 document.addEventListener('DOMContentLoaded', async() => {
-    state = JSON.parse(window.localStorage.state);
+    const { hash } = window.location;
+    if (hash) {
+        // teams
+    } else {
+      state = JSON.parse(window.localStorage.state);
+    }
     const teams = balanceTeamsByLevels(state.players);
     //console.log(teams, totalLevels(teams.team1), totalLevels(teams.team2));
     const result = document.getElementById('result_row');
     result.innerHTML = generateTeam(teams.team1) + vs() + generateTeam(teams.team2);
     addOpggLinks(0);
     addOpggLinks(1);
+    document.getElementById('shareLink').addEventListener('click', () => copyState());
 }, false);

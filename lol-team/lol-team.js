@@ -1,3 +1,6 @@
+const API_KEY = 'RGAPI-2b8cd8f5-dee8-43e0-8713-15afeb257e5b';
+const capitalize = ([firstLetter, ...restOfWord]) =>
+  firstLetter.toUpperCase() + restOfWord.join("");
 const log = m => console.log(m);
 class Player {
     constructor(name, position, level) {
@@ -42,9 +45,12 @@ const getNewParticipant = (index, player) => {
     });
     return `
 <div id="mix_players__${index}" class="participant-div participant-div-form row mb-2">
-    <div class="col-md-3">
+    <div class="col-md-3 d-flex align-items-center">
         <div class="input-group">
             <input type="text" id="mix_players_${index}_name" name="mix.players.${index}.name" class="form-control input-participants" placeholder="Player ${index+1}" value="${player.name}" required>
+        </div>
+        <div class="tier-wrapper">
+            <a class="btn btn-secondary px-1 ms-1 disabled" target="_blank" href="#"><small class="tier-text">Unranked</small></a>
         </div>
     </div>
     <div class="col-md-3 positions">
@@ -101,7 +107,7 @@ const levelConfig = () => {
 const addPlayer = (index, player) => {
     const players = document.getElementById('mix_players');
     const div = document.createElement('div');
-    const p = player || new Player('', ['all'], 5);
+    const p = player || new Player('', ['all'], 0);
     div.innerHTML = getNewParticipant(index, p);
     players.append(div);
     div.querySelectorAll('.position-item').forEach(input => input.addEventListener('change', () => {
@@ -119,7 +125,10 @@ const addPlayer = (index, player) => {
         label.classList.toggle('active');
         saveState();
     }));
-    div.querySelectorAll('.input-participants').forEach(i => i.addEventListener('change', () => saveState()));
+    div.querySelectorAll('.input-participants').forEach(i => i.addEventListener('change', () => {
+        saveState();
+        setTierByInputChange(i);
+    }));
     div.querySelectorAll('.level-input').forEach(i => {
         i.addEventListener('change', e => {
             div.querySelectorAll('.level-input').forEach(ii => {
@@ -183,7 +192,8 @@ const submitted = () => {
         }
     });
     if (isValid) {
-        window.location = './team-match-results.html'
+        window.open('./team-match-results.html', '_blank');
+        // window.location = './team-match-results.html'
     };
     
     return false;
@@ -194,12 +204,66 @@ importBtn.addEventListener('click', () => {
     const pList = document.getElementById('import-participant-list').value.split(/\n/);
     let i = 0;
     pList.forEach((value) => {
-        if (value) {
-            document.getElementById(`mix_players_${i}_name`).value = value;
-            i++;
-        }        
-    })
+        let nameInputEl;
+        if (value && (value.includes('joined the') || value.includes('님이 로비에 참가'))) {
+            if(i >= parseInt(document.querySelector('.head-select').value)) {
+                return;
+            }
+            if (value.includes('joined the')) {
+                nameInputEl = document.getElementById(`mix_players_${i}_name`);
+                nameInputEl.value = value.split(' joined the')[0];
+                setTierByInputChange(nameInputEl);
+                i++;
+            } else if (value.includes('님이 로비에 참가')) {
+                nameInputEl = document.getElementById(`mix_players_${i}_name`);
+                nameInputEl.value = value.split(' 님이 로비에 참가')[0];
+                setTierByInputChange(nameInputEl);
+                i++;
+            }
+        }
+    });
+    saveState();
+    if (i > 0) {
+        document.querySelector('a.import-icon').click();
+    }
 });
+
+const setTierByInputChange = async (inputEl) => {
+    const name = inputEl.value;
+    const playerEl = inputEl.closest('.participant-div');
+    const btn = playerEl.querySelector('.tier-wrapper a'); 
+    const tierEl = playerEl.querySelector('.tier-text');
+    let tierStr = 'Unranked';
+    if (!name) {
+        tierEl.innerHTML = tierStr;
+        btn.classList.add('disabled');
+        return;
+    }
+    try {
+        const summAPI = `https://na1.api.riotgames.com/lol/summoner/v4/summoners/by-name/${name}?api_key=${API_KEY}`;
+        const summRes = await fetch(summAPI);
+        if(!summRes.ok) {
+            tierEl.innerHTML = tierStr;
+            btn.classList.add('disabled');
+            return;
+        };
+        const summJson = await summRes.json();
+        const summId = summJson.id
+        const leagueAPI = `https://na1.api.riotgames.com/lol/league/v4/entries/by-summoner/${summId}?api_key=${API_KEY}`;
+        const leagueRes = await fetch(leagueAPI);
+        const leagueJson = await leagueRes.json();
+        leagueJson?.forEach(l => {
+            if (l.queueType.toLowerCase().includes('solo')) {
+                tierStr = `${l.tier.toLowerCase()} ${l.rank}`;
+            }
+        });
+        btn.href = `https://www.op.gg/summoners/na/${name}`;
+        btn.classList.remove('disabled');
+    } catch(err) {
+        console.error('Failed to load Riot API', err);
+    }
+    tierEl.innerHTML = capitalize(tierStr);
+}
 
 const clearAll = () => {
     document.getElementById('mix_players').innerHTML = '';
@@ -215,8 +279,41 @@ const clearAll = () => {
     initTeam();
 };
 
+const utf8ToB64 = (str) => window.btoa(unescape(encodeURIComponent(str)));
+const b64ToUtf8 = (str) => decodeURIComponent(escape(window.atob(str)));
+const parseEncodedState = (encodedState) => {
+    try {
+      return JSON.parse(b64ToUtf8(decodeURIComponent(encodedState)));
+    } catch (e) {
+      console.error(e);
+    }
+    return null;
+}
+const getUrl = (state) => {
+    const url = window.location.href.split('#')[0];
+    return `${url}#${utf8ToB64(JSON.stringify(state))}`;
+};
+
+const copyState = async () => {
+    try {
+        const blob = new Blob([getUrl(state)], { type: 'text/plain' });
+        const data = [new ClipboardItem({ [blob.type]: blob })];
+        await navigator.clipboard.write(data);
+        alert('Share URL is copied to clipboard.');
+    } catch (err) {
+        console.error(err.name, err.message);
+    }
+    return false;
+}
+
 const initTeam = () => {
-    if (window.localStorage.state) {
+    const { hash } = window.location;
+    if (hash) {
+        window.location.hash = '';
+        const encodedState = hash.startsWith('#') ? hash.substring(1) : hash;
+        state = parseEncodedState(encodedState);
+    }
+    else if (window.localStorage.state) {
         state = JSON.parse(window.localStorage.state);
         if (!state.levelConfig) {
             state.levelConfig = defaultLevelMap;
@@ -232,6 +329,8 @@ const initTeam = () => {
     }
     numParticipantsEvent();
     levelConfig();
+    document.querySelectorAll('.input-participants').forEach(i => setTierByInputChange(i));
+    document.getElementById('shareLink').addEventListener('click', () => copyState());
 };
 
 
