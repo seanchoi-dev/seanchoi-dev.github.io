@@ -121,6 +121,9 @@ label.active {
     font-size: 12px;
 }
 
+.bgm-select {
+    border-radius: 7px;
+}
 
 /* for result */
 .result {

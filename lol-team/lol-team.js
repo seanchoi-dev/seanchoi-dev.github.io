@@ -1,4 +1,4 @@
-const API_KEY = 'RGAPI-2b8cd8f5-dee8-43e0-8713-15afeb257e5b';
+const API_KEY = 'RGAPI-249571a8-bb26-4903-8ccc-9448e3da21f3';
 const capitalize = ([firstLetter, ...restOfWord]) =>
   firstLetter.toUpperCase() + restOfWord.join("");
 const log = m => console.log(m);
@@ -331,6 +331,12 @@ const initTeam = () => {
     levelConfig();
     document.querySelectorAll('.input-participants').forEach(i => setTierByInputChange(i));
     document.getElementById('shareLink').addEventListener('click', () => copyState());
+    document.getElementById('bgmSelect').addEventListener('change', e => {
+        const audio = document.querySelector('.audio-player audio');
+        audio.querySelector('source').src = e.target.value;
+        audio.load();
+        audio.play();
+    });
 };
 
 

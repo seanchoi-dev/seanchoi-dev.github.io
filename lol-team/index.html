@@ -79,9 +79,14 @@ Youngjin joined the lobby"></textarea>
                                 <button type="submit" id="mix_save" class="btn btn-primary py-3 px-5 mx-auto">Generate Match</button>
                             </div>
                             <div class="audio-player">
-                                <h6 class="px-3 pt-3"><small>2022 LCK 밴픽 브금  LCK Champ Select BGM</small></h6>
+                                <div class="px-3 pt-3"><small>
+                                    <select name="bgm" id="bgmSelect" class="bgm-select">
+                                        <option value="../lib/audios/2022 LCK 밴픽 브금  LCK Champ Select BGM.mp3">2022 LCK 밴픽 브금 LCK Champ Select BGM</option>
+                                        <option value="../lib/audios/Take Over - Worlds 2020.mp3">Take Over - Worlds 2020.mp3</option>
+                                    </select>
+                                </small></div>
                                 <audio controls loop>
-                                    <source id = 'menuAudio' src='../lib/audios/2022 LCK 밴픽 브금  LCK Champ Select BGM.mp3'/>
+                                    <source id = 'bgmSource' src='../lib/audios/2022 LCK 밴픽 브금  LCK Champ Select BGM.mp3'/>
                                     <embed src= '../lib/audios/2022 LCK 밴픽 브금  LCK Champ Select BGM.mp3' loop='loop'/>
                                 </audio>
                             </div>                            
