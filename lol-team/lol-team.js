@@ -228,6 +228,16 @@ importBtn.addEventListener('click', () => {
     }
 });
 
+const getTierFromOpgg = async (name) => {
+    const url = `https://www.op.gg/summoners/na/${name}`;
+    const res = await fetch(url);
+    const text = await res.text();
+    const template = document.createElement('template');
+    template.innerHTML = text;
+    const tier = template.content.querySelector('.tier')?.textContent || false;
+    return tier;
+}
+
 const setTierByInputChange = async (inputEl) => {
     const name = inputEl.value;
     const playerEl = inputEl.closest('.participant-div');
@@ -239,9 +249,25 @@ const setTierByInputChange = async (inputEl) => {
         btn.classList.add('disabled');
         return;
     }
+    
+    const setByOpgg = async () => {
+        tierStr = await getTierFromOpgg(name);
+        if (tierStr) {
+            btn.href = `https://www.op.gg/summoners/na/${name}`;
+            btn.classList.remove('disabled');
+            tierEl.innerHTML = capitalize(tierStr);
+            return;
+        }
+    };
+
     try {
         const summAPI = `https://na1.api.riotgames.com/lol/summoner/v4/summoners/by-name/${name}?api_key=${API_KEY}`;
         const summRes = await fetch(summAPI);
+        
+        if (summRes.status !== 200 && summRes.status !== 404) {
+            setByOpgg();
+        }
+
         if(!summRes.ok) {
             tierEl.innerHTML = tierStr;
             btn.classList.add('disabled');
@@ -251,6 +277,11 @@ const setTierByInputChange = async (inputEl) => {
         const summId = summJson.id
         const leagueAPI = `https://na1.api.riotgames.com/lol/league/v4/entries/by-summoner/${summId}?api_key=${API_KEY}`;
         const leagueRes = await fetch(leagueAPI);
+        
+        if (leagueRes.status !== 200 && leagueRes.status !== 404) {
+            setByOpgg();
+        }
+        
         const leagueJson = await leagueRes.json();
         leagueJson?.forEach(l => {
             if (l.queueType.toLowerCase().includes('solo')) {
