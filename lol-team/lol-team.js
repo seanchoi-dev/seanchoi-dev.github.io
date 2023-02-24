@@ -1,4 +1,4 @@
-const API_KEY = 'RGAPI-249571a8-bb26-4903-8ccc-9448e3da21f3';
+const API_KEY = 'RGAPI-2b7c9afd-c598-4861-a545-dc7bd09e9332';
 const capitalize = ([firstLetter, ...restOfWord]) =>
   firstLetter.toUpperCase() + restOfWord.join("");
 const log = m => console.log(m);
