@@ -1,3 +1,4 @@
+const API_KEY = 'RGAPI-249571a8-bb26-4903-8ccc-9448e3da21f3';
 const log = m => console.log(m);
 const getKeyByValue = (object, value) => {
   return Object.keys(object).find(key => object[key] === value);
@@ -97,7 +98,11 @@ const generatePlayer = (player) => {
             <div class="position d-flex me-2">
                 ${positionsHTML}
             </div>
-            <div class="level bg-warning p-1 d-flex justify-content-between"><div>${getKeyByValue(state.levelConfig, player.level)}</div><div><small>(${player.level})</small></div></div>
+            <div class="level bg-warning p-1 d-flex justify-content-between">
+              <div>${getKeyByValue(state.levelConfig, player.level)}</div>
+              <div><small>(${player.level})</small></div>
+            </div>
+            <div class="ps-2 pe-1 opgg-link"><img class="opacity-0" src="../lib/images/opgg.png" draggable="false"></div>
         </div>
     </div>`;
 };
@@ -105,31 +110,126 @@ const generateTeam = (team) => {
     let coveredPostions = new Set();
     let coveredPostionsHTML = '';
     let playersHTML = '';
+    let allCounts = 0;
+    let positionCounts = 0;
     team.forEach(p => {
         playersHTML += generatePlayer(p)
-        p.position.forEach(position => coveredPostions.add(position));
+        p.position.forEach(position => {
+          coveredPostions.add(position);
+          if (position === 'all') {
+            allCounts++;
+          }
+        });
     });
     coveredPostions = [...(coveredPostions)].sort((a, b)=>{
       return positionOrder[a] - positionOrder[b];
     });
-    coveredPostions.forEach(position => coveredPostionsHTML += `<div class="icon label-position-${position} me-1"></div>`)
+    coveredPostions.forEach(position => {
+      coveredPostionsHTML += `<div class="icon label-position-${position} me-1"></div>`
+      positionCounts++;
+    });
+    
+    // For extra All positions
+    for (let i=0; i < allCounts-1 && positionCounts < 5; i++) {
+      coveredPostionsHTML += `<div class="icon label-position-all me-1"></div>`;
+      positionCounts++;
+    }
+
     return `<div class="team col-5">
     ${playersHTML}
     <div class="mt-1 d-flex justify-content-between">
-        <div class="covered-positions d-flex mt-2">
+        <div class="covered-positions d-flex mt-2 ${positionCounts < 5 ? 'warning border border-3 border-danger' : ''}">
             ${coveredPostionsHTML}
         </div>
         <div class="total me-1 text-white">${totalLevels(team)}</div>
-    </div>    
+    </div>
+    <div class="opgg-all mt-3"><a target="_blank" href="https://www.op.gg/multisearch/na?summoners="><img src="../lib/images/opgg.png"></a></div>
 </div>`;
 }
 const vs = () => {
     return `<div class="vs col-2 text-white d-flex align-items-center justify-content-center"><img src="../lib/images/vs.png"></div>`;
 }
-document.addEventListener('DOMContentLoaded', function () {
-    state = JSON.parse(window.localStorage.state);
-    const teams = balanceTeamsByLevels(state.players);
-    //console.log(teams, totalLevels(teams.team1), totalLevels(teams.team2));
+
+const isValidSummonerName = async (name) => {
+  const target = `https://na1.api.riotgames.com/lol/summoner/v4/summoners/by-name/${name}?api_key=${API_KEY}`;
+  const res = await fetch(target);
+  
+  // For the case that Riot API rate limit is exausted.
+  if (res.status !== 200 && res.status !== 404) {
+    console.log(name, res.status)
+    const opgg = `https://www.op.gg/summoners/na/${name}`;
+    const resOpgg = await fetch(opgg);
+    const text = await resOpgg.text();
+    return text.includes('<h1 class="summoner-name"');
+  }
+  return res.ok;
+}
+
+const addOpggLinks = (teamIndex) => {
+  const team = document.querySelectorAll('.team')[teamIndex];
+  const opggForAll = team.querySelector('.opgg-all a');
+  team.querySelectorAll('.player').forEach(async p => {
+    const name = p.querySelector('.name').textContent;
+    const opgg = p.querySelector('.opgg-link');
+    if (await isValidSummonerName(name)) {
+      opgg.innerHTML = `<a target="_blank" href="${`https://www.op.gg/summoners/na/${name}`}"><img src="../lib/images/opgg.png"></a>`;
+      opgg.classList.remove('opacity-0');
+      const { search } = new URL(opggForAll.href);
+      const searchParams  = new URLSearchParams(search);
+      searchParams.set('summoners', `${searchParams.get('summoners')}, ${name}`);
+      opggForAll.href = `https://www.op.gg/multisearch/na?${searchParams.toString()}`;
+    } else {
+      opgg.innerHTML = '<img class="opacity-0" src="../lib/images/opgg.png" draggable="false">';     
+    }
+  });
+};
+
+const utf8ToB64 = (str) => window.btoa(unescape(encodeURIComponent(str)));
+const b64ToUtf8 = (str) => decodeURIComponent(escape(window.atob(str)));
+const parseEncodedTeams = (encodedTeams) => {
+    try {
+      return JSON.parse(b64ToUtf8(decodeURIComponent(encodedTeams)));
+    } catch (e) {
+      console.error(e);
+    }
+    return null;
+}
+const getUrl = (teams) => {
+    const url = window.location.href.split('#')[0];
+    teams.levelConfig = state.levelConfig;
+    return `${url}#${utf8ToB64(JSON.stringify(teams))}`;
+};
+
+const copyState = async (teams) => {
+  console.log(state);
+    try {
+        const blob = new Blob([getUrl(teams)], { type: 'text/plain' });
+        const data = [new ClipboardItem({ [blob.type]: blob })];
+        await navigator.clipboard.write(data);
+        alert('Share URL is copied to clipboard.');
+    } catch (err) {
+        console.error(err.name, err.message);
+    }
+    return false;
+}
+
+document.addEventListener('DOMContentLoaded', async() => {
+    const { hash } = window.location;
+    let decodedTeams = {};
+    if (hash) {
+      // window.location.hash = '';
+      const encodedTeams = hash.startsWith('#') ? hash.substring(1) : hash;
+      decodedTeams = parseEncodedTeams(encodedTeams);
+      state.levelConfig = decodedTeams.levelConfig;
+    } else {
+      state = JSON.parse(window.localStorage.state);
+    }
+
+    const teams = decodedTeams.team1 ? decodedTeams : balanceTeamsByLevels(state.players);
+    // console.log(teams, totalLevels(teams.team1), totalLevels(teams.team2));
     const result = document.getElementById('result_row');
     result.innerHTML = generateTeam(teams.team1) + vs() + generateTeam(teams.team2);
+    addOpggLinks(0);
+    addOpggLinks(1);
+    document.getElementById('shareLink').addEventListener('click', () => copyState(teams));
 }, false);
