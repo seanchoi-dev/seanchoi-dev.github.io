@@ -204,29 +204,25 @@ importBtn.addEventListener('click', () => {
     const pList = document.getElementById('import-participant-list').value.split(/\n/);
     const pArray = [];
     let nameInputEl;
-    let i = 0;
     pList.forEach((value) => {
-        if (value && (value.includes('joined the') || value.includes('님이 로비에 참가'))) {
-            if(i >= parseInt(document.querySelector('.head-select').value)) {
-                return;
-            }
+        if (!value) return;
+        if (value.includes('joined the') || value.includes('님이 로비에 참가')) {
             if (value.includes('joined the')) {
                 pArray.push(value.split(' joined the')[0]);
-            } else if (value.includes('님이 로비에 참가')) {
+            } else {
                 pArray.push(value.split(' 님이 로비에 참가')[0]);
-            } 
-        }else if (value && (value.includes('left the') || value.includes('님이 로비를 떠났'))){ //Remove if player left lobby
-            for(let j=0; j <= pArray.length -1; j++){
-                if(pArray[j] == value.split(' 님이 로비를 떠났')[0] || pArray[j] == value.split(' left the')[0]){
-                    pArray.splice(j, 1);   
+            }
+        } else if (value.includes('left the') || value.includes('님이 로비를 떠났')) { //Remove if player left lobby
+            for (let j=0; j < pArray.length; j++){
+                if(pArray[j] == value.split(' 님이 로비를 떠났')[0] || pArray[j] == value.split(' left the')[0]) {
+                    pArray.splice(j, 1);
                 }
             }
         }
-        i++;
     });
-    for(let i=0;i<pArray.length-1; i++){
+    for(let i=0; i<pArray.length; i++){
         nameInputEl = document.getElementById(`mix_players_${i}_name`);
-        nameInputEl.value = pArray[i]   
+        nameInputEl.value = pArray[i];   
         setTierByInputChange(nameInputEl);
     }
     saveState();
