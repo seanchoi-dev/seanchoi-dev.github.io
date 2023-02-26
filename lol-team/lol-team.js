@@ -241,6 +241,10 @@ const getTierFromOpgg = async (name) => {
     return tier;
 }
 
+const setLevelByTier = (tier) => {
+
+}
+
 const setTierByInputChange = async (inputEl) => {
     const name = inputEl.value;
     const playerEl = inputEl.closest('.participant-div');
