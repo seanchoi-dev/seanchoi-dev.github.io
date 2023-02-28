@@ -1,4 +1,4 @@
-const API_KEY = 'RGAPI-2e0be555-744b-4637-bf42-965bcb17c5f5';
+const API_KEY = 'RGAPI-fa003659-def1-4aec-9283-b4f997368bbc';
 const log = m => console.log(m);
 const getKeyByValue = (object, value) => {
   return Object.keys(object).find(key => object[key] === value);
