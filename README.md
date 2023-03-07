@@ -1,2 +1,2 @@
-- Menu picking tool w/ Google spreadsheet - https://seanchoi-dev.github.io/menu
+- Menu picking tool w/ Google spreadsheet - https://seanchoi-dev.github.io/menu (mobile/tablet friendly only for now)
 - League of legend team balancing tool - https://seanchoi-dev.github.io/lol-team (now this is redirecting to https://lolbalance.com/)
